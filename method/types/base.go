@@ -1,17 +1,14 @@
 package types
 
-import (
-	"log"
-
-	golangtbotapi "github.com/udev-21/golang-tbot-api"
-)
-
+type RawJsonPayloader interface {
+	RawJsonPayload() (map[string]interface{}, error)
+}
 type ViaReplyMarkup struct {
 	ReplyMarkup ReplyMarkup `json:"-"`
 }
 
 type ReplyMarkup interface {
-	golangtbotapi.RawJsonPayloader
+	RawJsonPayloader
 }
 
 // replyMarkup can be either InlineKeyboardMarkup
@@ -30,7 +27,6 @@ const (
 )
 
 func (m *ViaParseMode) WithParseModeHTML() {
-	log.Println("withParseModeHTML")
 	m.ParseMode = new(string)
 	*m.ParseMode = ParseModeHTML
 }

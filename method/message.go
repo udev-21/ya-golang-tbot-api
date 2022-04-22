@@ -1,8 +1,6 @@
 package method
 
 import (
-	"log"
-
 	. "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/types"
 	"github.com/udev-21/golang-tbot-api/utils"
@@ -16,12 +14,9 @@ func NewSendMessage(text string) *Message {
 
 func (m *Message) RawJsonPayload() (map[string]interface{}, error) {
 	var err error
-
-	log.Println(m.ParseMode)
 	if m.ReplyMarkup != nil {
 		m.ReplyMarkup_ = make(map[string]interface{})
 		m.ReplyMarkup_, err = m.ReplyMarkup.RawJsonPayload()
-		log.Println(m.ReplyMarkup_)
 	}
 	if err != nil {
 		return nil, err
@@ -50,4 +45,8 @@ type Message struct {
 
 	ViaReplyMarkup
 	ViaParseMode
+}
+
+func (m *Message) ReplyToMessage(msg types.Message) {
+	m.ReplyToMessageID = &msg.MessageID
 }

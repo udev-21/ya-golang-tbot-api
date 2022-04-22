@@ -13,25 +13,76 @@ import (
 )
 
 type BotAPI struct {
+	telegramAPIUrl string
+	poller         Poller
+
 	httpClient *http.Client
 	token      string
 	debug      bool
 	logger     log.Logger
 	privateKey rsa.PrivateKey
-	handlers   []HandlerFunc
+
+	updates chan types.Update
+
+	handlers []HandlerFunc
+	stop     chan chan struct{}
 }
 
 func NewBotAPI(token string) *BotAPI {
+
 	res := BotAPI{
 		httpClient: &http.Client{Timeout: 3 * time.Second},
 		token:      token,
+		poller:     NewLongPoller(),
+		updates:    make(chan types.Update, 200),
 	}
+	res.telegramAPIUrl = fmt.Sprintf("https://api.telegram.org/bot%s/", token)
 	return &res
 }
 
 func (ba *BotAPI) WithPrivateKey(privKey rsa.PrivateKey) *BotAPI {
 	ba.privateKey = privKey
 	return ba
+}
+
+func (ba *BotAPI) GetUpdates(payload MessagePayload) ([]types.Update, error) {
+
+	bodyMap, err := payload.RawJsonPayload()
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := json.Marshal(bodyMap)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := http.NewRequest(http.MethodPost, ba.telegramAPIUrl+payload.GetEndpoint(), bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, fmt.Errorf("prepare request error")
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+
+	var res struct {
+		OK      bool           `json:"ok"`
+		Updates []types.Update `json:"result"`
+	}
+
+	response, err := ba.httpClient.Do(request)
+	if err != nil {
+		return nil, fmt.Errorf("request error")
+	}
+	defer response.Body.Close()
+	err = json.NewDecoder(response.Body).Decode(&res)
+	if err != nil {
+		return nil, fmt.Errorf("parse response error")
+	}
+	if !res.OK {
+		return nil, fmt.Errorf("telegram api response error")
+	}
+	return res.Updates, nil
 }
 
 func (ba *BotAPI) ProcessUpdate(update types.Update) {
@@ -65,14 +116,10 @@ func (ba *BotAPI) Send(reciever types.Chat, payload MessagePayload) (*types.ApiR
 		if err != nil {
 			return nil, err
 		}
-		log.Println(string(p))
 		body := bytes.NewBuffer(p)
-		log.Println(ba.token, payload)
-		log.Println(fmt.Sprintf("https://api.telegram.org/bot%s/%s", ba.token, payload.GetEndpoint()))
-		request, err := http.NewRequest(http.MethodPost, fmt.Sprintf("https://api.telegram.org/bot%s/%s", ba.token, payload.GetEndpoint()), body)
+		request, err := http.NewRequest(http.MethodPost, fmt.Sprintf(ba.telegramAPIUrl+"%s", payload.GetEndpoint()), body)
 
 		if err != nil {
-			log.Println("papalsyas")
 			panic(err)
 		}
 
@@ -89,4 +136,36 @@ func (ba *BotAPI) Send(reciever types.Chat, payload MessagePayload) (*types.ApiR
 		return &res, nil
 	}
 	return nil, nil
+}
+
+func (b *BotAPI) Start() {
+	if b.poller == nil {
+		panic("telebot: can't start without a poller")
+	}
+	log.Println("starting bot long polling")
+	stop := make(chan struct{})
+	stopConfirm := make(chan struct{})
+
+	go func() {
+		log.Println("poller gone")
+		b.poller.Poll(b, b.updates, stop)
+		close(stopConfirm)
+	}()
+
+	log.Println("after poller")
+	// time.Sleep(2 * time.Second)
+
+	for {
+		select {
+		// handle incoming updates
+		case upd := <-b.updates:
+			b.ProcessUpdate(upd)
+			// call to stop polling
+		case confirm := <-b.stop:
+			close(stop)
+			<-stopConfirm
+			close(confirm)
+			return
+		}
+	}
 }
