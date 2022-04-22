@@ -1,6 +1,6 @@
 package types
 
-import "github.com/udev21/golang-tbot-api/utils"
+import "github.com/udev-21/golang-tbot-api/utils"
 
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`

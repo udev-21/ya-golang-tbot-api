@@ -3,9 +3,9 @@ package method
 import (
 	"log"
 
-	. "github.com/udev21/golang-tbot-api/method/types"
-	"github.com/udev21/golang-tbot-api/types"
-	"github.com/udev21/golang-tbot-api/utils"
+	. "github.com/udev-21/golang-tbot-api/method/types"
+	"github.com/udev-21/golang-tbot-api/types"
+	"github.com/udev-21/golang-tbot-api/utils"
 )
 
 func NewSendMessage(text string) *Message {

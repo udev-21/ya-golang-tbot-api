@@ -1,6 +1,6 @@
 package method
 
-import "github.com/udev21/golang-tbot-api/types/universal"
+import "github.com/udev-21/golang-tbot-api/types/universal"
 
 type AnswerInlineQuery struct {
 	InlineQueryID     string                        `json:"inline_query_id"`

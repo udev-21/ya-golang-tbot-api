@@ -3,7 +3,7 @@ package types
 import (
 	"log"
 
-	golangtbotapi "github.com/udev21/golang-tbot-api"
+	golangtbotapi "github.com/udev-21/golang-tbot-api"
 )
 
 type ViaReplyMarkup struct {

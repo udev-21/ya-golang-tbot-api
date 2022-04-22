@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/udev21/golang-tbot-api/types/passport"
-	"github.com/udev21/golang-tbot-api/utils"
+	"github.com/udev-21/golang-tbot-api/types/passport"
+	"github.com/udev-21/golang-tbot-api/utils"
 )
 
 type EncryptedPassportElement struct {

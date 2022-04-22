@@ -1,6 +1,6 @@
 package universal
 
-import "github.com/udev21/golang-tbot-api/types"
+import "github.com/udev-21/golang-tbot-api/types"
 
 type InlineQueryResult struct {
 	Type                string                      `json:"type"`

@@ -1,7 +1,7 @@
 package filter
 
 import (
-	golangtbotapi "github.com/udev21/golang-tbot-api"
+	golangtbotapi "github.com/udev-21/golang-tbot-api"
 )
 
 func Message(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {

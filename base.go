@@ -3,7 +3,7 @@ package golangtbotapi
 import (
 	"os"
 
-	"github.com/udev21/golang-tbot-api/types"
+	"github.com/udev-21/golang-tbot-api/types"
 )
 
 type RawJsonPayloader interface {

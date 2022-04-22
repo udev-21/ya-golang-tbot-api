@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/udev21/golang-tbot-api/types"
+	"github.com/udev-21/golang-tbot-api/types"
 )
 
 type BotAPI struct {

@@ -3,7 +3,7 @@ package passport
 import (
 	"encoding/base64"
 
-	"github.com/udev21/golang-tbot-api/utils"
+	"github.com/udev-21/golang-tbot-api/utils"
 )
 
 // https://core.telegram.org/passport#datacredentials
