@@ -4,8 +4,10 @@ func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButto
 	return buttons
 }
 
-func NewInlineKeyboard(rows ...[]InlineKeyboardButton) [][]InlineKeyboardButton {
-	return rows
+func NewInlineKeyboard(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup {
+	return &InlineKeyboardMarkup{
+		InlineKeyboard: rows,
+	}
 }
 
 func NewInlineKeyboardButton(text string) *InlineKeyboardButton {

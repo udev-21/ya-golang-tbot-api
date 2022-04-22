@@ -2,7 +2,7 @@ package types
 
 type PreCheckoutQuery struct {
 	ID               string     `json:"id"`
-	From             User       `json:"from"`
+	Sender           User       `json:"from"`
 	Currency         string     `json:"currency"`
 	TotalAmount      int64      `json:"total_amount"`
 	InvoicePaylod    string     `json:"invoice_payload"`

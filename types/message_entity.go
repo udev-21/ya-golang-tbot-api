@@ -5,6 +5,6 @@ type MessageEntity struct {
 	Offset   int64   `json:"offset"`
 	Length   int64   `json:"length"`
 	Url      *string `json:"url,omitempty"`
-	User     *User   `json:"user,omitempty"`
+	Sender   *User   `json:"user,omitempty"`
 	Language *string `json:"language,omitempty"`
 }

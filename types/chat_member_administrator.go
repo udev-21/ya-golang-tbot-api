@@ -2,7 +2,7 @@ package types
 
 type ChatMemberAdministrator struct {
 	Status              string  `json:"status"`
-	User                User    `json:"user"`
+	Sender              User    `json:"user"`
 	CanBeEdited         bool    `json:"can_be_edited"`
 	IsAnonymous         bool    `json:"is_anonymous"`
 	CanManageChat       bool    `json:"can_manage_chat"`

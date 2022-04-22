@@ -2,11 +2,11 @@ package types
 
 type Message struct {
 	MessageID                     int64                          `json:"message_id"`
-	From                          *User                          `json:"from,omitempty"`
+	Sender                        *User                          `json:"from,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Date                          int64                          `json:"date"`
 	Chat                          Chat                           `json:"chat"`
-	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
+	ForwardSender                 *User                          `json:"forward_from,omitempty"`
 	ForwardFromChat               *Chat                          `json:"forward_from_chat,omitempty"`
 	ForwardFromMessageID          *int64                         `json:"forward_from_message_id,omitempty"`
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`

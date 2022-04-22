@@ -1,24 +1,26 @@
-package types
+package universal
+
+import "github.com/udev21/golang-tbot-api/types"
 
 type InlineQueryResult struct {
-	Type                string                `json:"type"`
-	ID                  string                `json:"id"`
-	Title               *string               `json:"title,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	Url                 *string               `json:"url,omitempty"`
-	HideUrl             *bool                 `json:"hide_url,omitempty"`
-	Description         *string               `json:"description,omitempty"`
-	ThumbUrl            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          *int64                `json:"thumb_width,omitempty"`
-	ThumbHeight         *int64                `json:"thumb_height,omitempty"`
+	Type                string                      `json:"type"`
+	ID                  string                      `json:"id"`
+	Title               *string                     `json:"title,omitempty"`
+	InputMessageContent *types.InputMessageContent  `json:"input_message_content,omitempty"`
+	ReplyMarkup         *types.InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	Url                 *string                     `json:"url,omitempty"`
+	HideUrl             *bool                       `json:"hide_url,omitempty"`
+	Description         *string                     `json:"description,omitempty"`
+	ThumbUrl            *string                     `json:"thumb_url,omitempty"`
+	ThumbWidth          *int64                      `json:"thumb_width,omitempty"`
+	ThumbHeight         *int64                      `json:"thumb_height,omitempty"`
 
-	PhotoUrl        *string         `json:"photo_url,omitempty"`
-	PhotoWidth      *int64          `json:"photo_width,omitempty"`
-	PhotoHeight     *int64          `json:"photo_height,omitempty"`
-	Caption         *string         `json:"caption,omitempty"`
-	ParseMode       *string         `json:"parse_mode,omitempty"`
-	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
+	PhotoUrl        *string               `json:"photo_url,omitempty"`
+	PhotoWidth      *int64                `json:"photo_width,omitempty"`
+	PhotoHeight     *int64                `json:"photo_height,omitempty"`
+	Caption         *string               `json:"caption,omitempty"`
+	ParseMode       *string               `json:"parse_mode,omitempty"`
+	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
 
 	GifUrl        *string `json:"gif_url,omitempty"`
 	GifWidth      *int64  `json:"gif_width,omitempty"`

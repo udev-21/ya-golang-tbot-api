@@ -8,60 +8,67 @@ import (
 // https://core.telegram.org/bots/api#inputfile
 type InputFile interface {
 	MustUpload() bool
-	// string or io.Reader
+	// should be either string or *os.File
 	Value() interface{}
 }
 
-type BaseInputFile struct{}
+func NewInputFileLocal(file *os.File) (InputFile, error) {
+	if file == nil {
+		return nil, fmt.Errorf("given file invalid")
+	}
+
+	return &inputFileLocal{
+		file: file,
+	}, nil
+}
+
+func NewInputFileTelegram(fileID string) (InputFile, error) {
+	return &inputFileTelegram{
+		fileID: fileID,
+	}, nil
+}
+
+func NewInputFileUrl(url string) (InputFile, error) {
+	return &inputFileUrl{
+		url: url,
+	}, nil
+}
 
 type AlwaysUpload struct{}
 
-func (mu AlwaysUpload) MustUpload() bool {
+func (mu *AlwaysUpload) MustUpload() bool {
 	return true
 }
 
 type AlwaysNotUpload struct{}
 
-func (mu AlwaysNotUpload) MustUpload() bool {
+func (mu *AlwaysNotUpload) MustUpload() bool {
 	return false
 }
 
-type InputFileUrl struct {
-	BaseInputFile
+type inputFileUrl struct {
 	AlwaysNotUpload
-	Url string
+	url string
 }
 
-func (ifu InputFileUrl) Value() interface{} {
-	return ifu.Url
+func (ifu *inputFileUrl) Value() interface{} {
+	return ifu.url
 }
 
-type InputFileTelegram struct {
-	BaseInputFile
+type inputFileTelegram struct {
 	AlwaysNotUpload
-	FileID string
+	fileID string
 }
 
-func (ifu InputFileTelegram) Value() interface{} {
-	return ifu.FileID
+func (ifu *inputFileTelegram) Value() interface{} {
+	return ifu.fileID
 }
 
-type InputFileLocal struct {
-	BaseInputFile
+type inputFileLocal struct {
 	AlwaysUpload
-	File *os.File
+	file *os.File
 }
 
-func (ifu InputFileLocal) Value() interface{} {
-	return ifu.File
-}
-
-func NewInputFileLocal(file *os.File) (*InputFileLocal, error) {
-	if file == nil {
-		return nil, fmt.Errorf("given file invalid")
-	}
-
-	return &InputFileLocal{
-		File: nil,
-	}, nil
+func (ifu *inputFileLocal) Value() interface{} {
+	return ifu.file
 }

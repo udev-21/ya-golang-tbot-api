@@ -1,18 +1,26 @@
 package golangtbotapi
 
 import (
-	"github.com/udev21/golang-tbot-api/methods"
+	"os"
+
 	"github.com/udev21/golang-tbot-api/types"
 )
 
-type MessagePayload interface {
-	GetEndpoint() string
-	GetFieldsJsonPayload(revicer interface{}) ([]byte, error)
+type RawJsonPayloader interface {
+	RawJsonPayload() (map[string]interface{}, error)
 }
 
-var _ MessagePayload = (*methods.Message)(nil)
+type MessagePayload interface {
+	RawJsonPayloader
+	GetEndpoint() string
+	UploadFiles() map[string]types.InputFile
+}
 
-type UploadFiler interface {
+type HandlerFunc func(Context) error
+
+type Middleware func(HandlerFunc) HandlerFunc
+
+type UploadWithFiles interface {
 	MessagePayload
-	UploadFiles() types.InputFile
+	MustUploadFiles() map[string]*os.File
 }
