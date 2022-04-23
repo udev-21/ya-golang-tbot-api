@@ -3,20 +3,19 @@ package types
 type RawJsonPayloader interface {
 	RawJsonPayload() (map[string]interface{}, error)
 }
-type ViaReplyMarkup struct {
-	ReplyMarkup ReplyMarkup `json:"-"`
+type ReplyMarkuper struct {
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 type ReplyMarkup interface {
-	RawJsonPayloader
+	IsReplyMarkup()
 }
 
-// replyMarkup can be either InlineKeyboardMarkup
-func (m *ViaReplyMarkup) WithKeyboard(replyMarkup ReplyMarkup) {
+func (m *ReplyMarkuper) WithKeyboard(replyMarkup ReplyMarkup) {
 	m.ReplyMarkup = replyMarkup
 }
 
-type ViaParseMode struct {
+type ParseModer struct {
 	ParseMode *string `json:"parse_mode,omitempty"`
 }
 
@@ -26,18 +25,17 @@ const (
 	ParseModeMarkdown   string = "Markdown"
 )
 
-func (m *ViaParseMode) WithParseModeHTML() {
+func (m *ParseModer) WithParseModeHTML() {
 	m.ParseMode = new(string)
 	*m.ParseMode = ParseModeHTML
 }
 
-func (m *ViaParseMode) WithParseModeParseModeMarkdownV2() {
+func (m *ParseModer) WithParseModeParseModeMarkdownV2() {
 	m.ParseMode = new(string)
 	*m.ParseMode = ParseModeMarkdownV2
-
 }
 
-func (m *ViaParseMode) WithParseModeParseModeMarkdown() {
+func (m *ParseModer) WithParseModeParseModeMarkdown() {
 	m.ParseMode = new(string)
 	*m.ParseMode = ParseModeMarkdown
 }

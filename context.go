@@ -1,12 +1,15 @@
 package golangtbotapi
 
-import "github.com/udev-21/golang-tbot-api/types"
+import (
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+	"github.com/udev-21/golang-tbot-api/types"
+)
 
 type Context interface {
 	// Bot returns the bot instance.
 	Bot() *BotAPI
 
-	Send(to types.Chat, paylad MessagePayload) (*types.ApiResponse, error)
+	Send(to interface{}, paylad myTypes.Sendable) (*types.ApiResponse, error)
 
 	// Update returns the original update.
 	Update() types.Update
@@ -193,6 +196,6 @@ func (n *nativeContext) Chat() *types.Chat {
 }
 
 // implement Send function of interface Context to internalContext
-func (n *nativeContext) Send(to types.Chat, payload MessagePayload) (*types.ApiResponse, error) {
+func (n *nativeContext) Send(to interface{}, payload myTypes.Sendable) (*types.ApiResponse, error) {
 	return n.bot.Send(to, payload)
 }

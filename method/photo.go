@@ -1,16 +1,40 @@
 package method
 
-import "github.com/udev-21/golang-tbot-api/types"
+import (
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+	"github.com/udev-21/golang-tbot-api/types"
+	"github.com/udev-21/golang-tbot-api/utils"
+)
 
 type Photo struct {
-	ChatID                  string                `json:"chat_id"`
-	Photo                   types.InputFile       `json:"photo"`
-	Caption                 *string               `json:"caption,omitempty"`
-	ParseMode               *string               `json:"parse_mode,omitempty"`
-	CaptionEntities         []types.MessageEntity `json:"caption_entities,omitempty"`
-	DisableNotification     *bool                 `json:"disable_notification,omitempty"`
-	ProtectContent          *bool                 `json:"protect_content,omitempty"`
-	ReplyToMessageID        *int64                `json:"reply_to_message_id,omitempty"`
-	AllowSendingWithutReply *bool                 `json:"allow_sending_without_reply,omitempty"`
-	ReplyMarkup             interface{}           `json:"reply_markup,omitempty"`
+	Photo           myTypes.InputFile     `json:"photo"`
+	Caption         *string               `json:"caption,omitempty"`
+	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
+
+	myTypes.ProtectContent
+	myTypes.ReplyToMessager
+	myTypes.ReplyMarkuper
+	myTypes.ParseModer
+	myTypes.DisableNotificationer
+}
+
+func (p *Photo) Endpoint() string {
+	return "sendPhoto"
+}
+
+func (p *Photo) Params() (myTypes.Params, error) {
+	var params myTypes.Params
+	var err error
+	params, err = utils.ConvertToMapStringInterface(p)
+	if err != nil {
+		return nil, err
+	}
+	params["photo"] = p.Photo
+	return params, nil
+}
+
+func (p *Photo) Files() []myTypes.InputFile {
+	var res []myTypes.InputFile
+	res = append(res, p.Photo)
+	return res
 }

@@ -1,7 +1,5 @@
 package types
 
-import "github.com/udev-21/golang-tbot-api/utils"
-
 func NewReplyKeyboardRemove() *ReplyKeyboardRemove {
 	return &ReplyKeyboardRemove{
 		RemoveKeyboard: true,
@@ -19,6 +17,5 @@ func (rkr *ReplyKeyboardRemove) WithSelective(selective bool) *ReplyKeyboardRemo
 	return rkr
 }
 
-func (rkm *ReplyKeyboardRemove) RawJsonPayload() (map[string]interface{}, error) {
-	return utils.ConvertToMapStringInterface(rkm)
-}
+// IsReplyMarkup - to satisfy ReplyMarkup interface
+func (rkm *ReplyKeyboardRemove) IsReplyMarkup() {}

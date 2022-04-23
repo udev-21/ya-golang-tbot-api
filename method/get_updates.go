@@ -3,7 +3,7 @@ package method
 import (
 	"time"
 
-	"github.com/udev-21/golang-tbot-api/types"
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/utils"
 )
 
@@ -35,13 +35,10 @@ func (gu *GetUpdates) WithAllowedUpdates(allowedUpdates []string) *GetUpdates {
 	return gu
 }
 
-func (gu *GetUpdates) RawJsonPayload() (map[string]interface{}, error) {
+func (gu *GetUpdates) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(gu)
 }
 
-func (gu GetUpdates) GetEndpoint() string {
+func (gu GetUpdates) Endpoint() string {
 	return "getUpdates"
-}
-func (gu GetUpdates) UploadFiles() map[string]types.InputFile {
-	return nil
 }

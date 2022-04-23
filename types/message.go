@@ -6,11 +6,11 @@ type Message struct {
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Date                          int64                          `json:"date"`
 	Chat                          Chat                           `json:"chat"`
-	ForwardSender                 *User                          `json:"forward_from,omitempty"`
+	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
 	ForwardFromChat               *Chat                          `json:"forward_from_chat,omitempty"`
 	ForwardFromMessageID          *int64                         `json:"forward_from_message_id,omitempty"`
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`
-	ForwardSenderName             *string                        `json:"forward_sender_name,omitempty"`
+	ForwardFromName               *string                        `json:"forward_sender_name,omitempty"`
 	ForwardDate                   *int64                         `json:"forward_date,omitempty"`
 	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`

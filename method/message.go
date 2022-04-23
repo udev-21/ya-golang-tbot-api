@@ -1,7 +1,8 @@
 package method
 
 import (
-	. "github.com/udev-21/golang-tbot-api/method/types"
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+
 	"github.com/udev-21/golang-tbot-api/types"
 	"github.com/udev-21/golang-tbot-api/utils"
 )
@@ -14,10 +15,15 @@ func NewSendMessage(text string) *Message {
 
 func (m *Message) RawJsonPayload() (map[string]interface{}, error) {
 	var err error
-	if m.ReplyMarkup != nil {
-		m.ReplyMarkup_ = make(map[string]interface{})
-		m.ReplyMarkup_, err = m.ReplyMarkup.RawJsonPayload()
-	}
+
+	// if m.ReplyMarkup != nil {
+	// 	m.ReplyMarkup_ = make(map[string]interface{})
+	// 	m.ReplyMarkup_, err = m.ReplyMarkup.RawJsonPayload()
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// }
+
 	if err != nil {
 		return nil, err
 	}
@@ -33,20 +39,22 @@ func (m *Message) GetEndpoint() string {
 }
 
 type Message struct {
-	ChatID                  string                 `json:"chat_id"`
-	Text                    string                 `json:"text"`
-	Entities                []types.MessageEntity  `json:"entities,omitempty"`
-	DisableWebPagePreview   *bool                  `json:"disable_web_page_preview,omitempty"`
-	DisableNotification     *bool                  `json:"disable_notification,omitempty"`
-	ProtectContent          *bool                  `json:"protect_content,omitempty"`
-	ReplyToMessageID        *int64                 `json:"reply_to_message_id,omitempty"`
-	AllowSendingWithutReply *bool                  `json:"allow_sending_without_reply,omitempty"`
-	ReplyMarkup_            map[string]interface{} `json:"reply_markup,omitempty"`
+	// ChatID                string                `json:"chat_id"`
+	Text                  string                `json:"text"`
+	Entities              []types.MessageEntity `json:"entities,omitempty"`
+	DisableWebPagePreview *bool                 `json:"disable_web_page_preview,omitempty"`
 
-	ViaReplyMarkup
-	ViaParseMode
+	myTypes.ProtectContent
+	myTypes.ReplyMarkuper
+	myTypes.ParseModer
+	myTypes.ReplyToMessager
+	myTypes.DisableNotificationer
 }
 
-func (m *Message) ReplyToMessage(msg types.Message) {
-	m.ReplyToMessageID = &msg.MessageID
+func (p *Message) Endpoint() string {
+	return "sendMessage"
+}
+
+func (p *Message) Params() (myTypes.Params, error) {
+	return utils.ConvertToMapStringInterface(p)
 }

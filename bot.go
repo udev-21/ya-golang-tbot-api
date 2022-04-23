@@ -5,10 +5,14 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"time"
 
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/types"
 )
 
@@ -16,11 +20,12 @@ type BotAPI struct {
 	telegramAPIUrl string
 	poller         Poller
 
-	httpClient *http.Client
-	token      string
-	debug      bool
-	logger     log.Logger
-	privateKey rsa.PrivateKey
+	httpClient      *http.Client
+	token           string
+	debug           bool
+	logger          log.Logger
+	privateKey      rsa.PrivateKey
+	testEnvironment bool
 
 	updates chan types.Update
 
@@ -31,7 +36,7 @@ type BotAPI struct {
 func NewBotAPI(token string) *BotAPI {
 
 	res := BotAPI{
-		httpClient: &http.Client{Timeout: 3 * time.Second},
+		httpClient: &http.Client{Timeout: 10 * time.Second},
 		token:      token,
 		poller:     NewLongPoller(),
 		updates:    make(chan types.Update, 200),
@@ -40,14 +45,18 @@ func NewBotAPI(token string) *BotAPI {
 	return &res
 }
 
+func (ba *BotAPI) TestEnvironment() {
+	ba.testEnvironment = true
+}
+
 func (ba *BotAPI) WithPrivateKey(privKey rsa.PrivateKey) *BotAPI {
 	ba.privateKey = privKey
 	return ba
 }
 
-func (ba *BotAPI) GetUpdates(payload MessagePayload) ([]types.Update, error) {
+func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
 
-	bodyMap, err := payload.RawJsonPayload()
+	bodyMap, err := payload.Params()
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +66,7 @@ func (ba *BotAPI) GetUpdates(payload MessagePayload) ([]types.Update, error) {
 		return nil, err
 	}
 
-	request, err := http.NewRequest(http.MethodPost, ba.telegramAPIUrl+payload.GetEndpoint(), bytes.NewBuffer(body))
+	request, err := http.NewRequest(http.MethodPost, ba.getPath("getUpdates"), bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, fmt.Errorf("prepare request error")
@@ -79,6 +88,7 @@ func (ba *BotAPI) GetUpdates(payload MessagePayload) ([]types.Update, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parse response error")
 	}
+
 	if !res.OK {
 		return nil, fmt.Errorf("telegram api response error")
 	}
@@ -100,42 +110,156 @@ func (ba *BotAPI) Handle(condition Middleware, handler HandlerFunc, additionalMi
 	ba.handlers = append(ba.handlers, handler)
 }
 
-func (ba *BotAPI) Send(reciever types.Chat, payload MessagePayload) (*types.ApiResponse, error) {
-	if _, ok := payload.(UploadWithFiles); !ok {
-		data, err := payload.RawJsonPayload()
-		if err != nil {
-			return nil, err
-		}
-		if reciever.ID != 0 {
-			data["chat_id"] = reciever.ID
-		} else {
-			data["chat_id"] = reciever.Username
-		}
+func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
 
-		p, err := json.Marshal(data)
-		if err != nil {
-			return nil, err
-		}
-		body := bytes.NewBuffer(p)
-		request, err := http.NewRequest(http.MethodPost, fmt.Sprintf(ba.telegramAPIUrl+"%s", payload.GetEndpoint()), body)
-
-		if err != nil {
-			panic(err)
-		}
-
-		request.Header.Set("Content-Type", "application/json")
-
-		var res types.ApiResponse
-
-		response, err := ba.httpClient.Do(request)
-		if err != nil {
-			panic(err)
-		}
-		defer response.Body.Close()
-		json.NewDecoder(response.Body).Decode(&res)
-		return &res, nil
+	p, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
 	}
-	return nil, nil
+	body := bytes.NewBuffer(p)
+
+	request, err := http.NewRequest(http.MethodPost, ba.getPath(endpoint), body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := ba.httpClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	var res types.ApiResponse
+	json.NewDecoder(response.Body).Decode(&res)
+	return &res, nil
+}
+
+func hasFilesNeedingUpload(files []myTypes.InputFile) bool {
+	for _, file := range files {
+		if _, ok := file.(myTypes.Uploadable); ok {
+			return true
+		}
+	}
+	return false
+}
+func (ba *BotAPI) requestWithFiles(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
+	r, w := io.Pipe()
+	m := multipart.NewWriter(w)
+
+	json.NewEncoder(os.Stdout).Encode(params)
+
+	go func() {
+		defer w.Close()
+		defer m.Close()
+
+		for field, value := range params {
+			if file, ok := value.(myTypes.Uploadable); ok {
+				name, reader, err := file.UploadData()
+				if err != nil {
+					w.CloseWithError(err)
+					return
+				}
+
+				part, err := m.CreateFormFile(field, name)
+				if err != nil {
+					w.CloseWithError(err)
+					return
+				}
+
+				if _, err := io.Copy(part, reader); err != nil {
+					w.CloseWithError(err)
+					return
+				}
+
+				if closer, ok := reader.(io.ReadCloser); ok {
+					if err = closer.Close(); err != nil {
+						w.CloseWithError(err)
+						return
+					}
+				}
+			} else {
+				if strval, ok := value.(string); ok {
+					if err := m.WriteField(field, strval); err != nil {
+						w.CloseWithError(err)
+						return
+					}
+				} else if strval, ok := value.(*string); ok {
+					if err := m.WriteField(field, *strval); err != nil {
+						w.CloseWithError(err)
+						return
+					}
+				} else {
+					val, err := json.Marshal(value)
+					if err != nil {
+						w.CloseWithError(err)
+						return
+					}
+					if err := m.WriteField(field, string(val)); err != nil {
+						w.CloseWithError(err)
+						return
+					}
+				}
+			}
+		}
+	}()
+
+	req, err := http.NewRequest("POST", ba.getPath(endpoint), r)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", m.FormDataContentType())
+
+	response, err := ba.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	defer response.Body.Close()
+	var res types.ApiResponse
+	json.NewDecoder(response.Body).Decode(&res)
+	return &res, nil
+}
+
+func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.ApiResponse, error) {
+	data, err := payload.Params()
+	if err != nil {
+		return nil, err
+	}
+
+	if chat, ok := reciever.(types.Chat); ok {
+		if chat.ID != 0 {
+			data["chat_id"] = chat.ID
+		} else {
+			data["chat_id"] = chat.Username
+		}
+	} else if chat, ok := reciever.(*types.Chat); ok {
+		if chat.ID != 0 {
+			data["chat_id"] = chat.ID
+		} else {
+			data["chat_id"] = chat.Username
+		}
+	}
+
+	// log.Println(data)
+
+	if payloadWithFiles, ok := payload.(myTypes.UploadWithFiles); ok {
+		if hasFilesNeedingUpload(payloadWithFiles.Files()) {
+			return ba.requestWithFiles(payload.Endpoint(), data)
+		}
+	}
+
+	return ba.request(payload.Endpoint(), data)
+
+}
+
+func (b BotAPI) getPath(endpoint string) string {
+	middle := ""
+	if b.testEnvironment {
+		middle = "test/"
+	}
+	return b.telegramAPIUrl + middle + endpoint
 }
 
 func (b *BotAPI) Start() {

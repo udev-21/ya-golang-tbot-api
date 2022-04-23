@@ -1,6 +1,10 @@
 package types
 
-import "github.com/udev-21/golang-tbot-api/utils"
+func NewForceReply() *ForceReply {
+	return &ForceReply{
+		ForceReply: true,
+	}
+}
 
 type ForceReply struct {
 	ForceReply            bool    `json:"force_reply"`
@@ -8,9 +12,6 @@ type ForceReply struct {
 	Selective             *bool   `json:"selective,omitempty"`
 }
 
-func (fr *ForceReply) RawJsonPayload() (map[string]interface{}, error) {
-	return utils.ConvertToMapStringInterface(fr)
-}
 func (fr *ForceReply) WithSelective() {
 	fr.Selective = new(bool)
 	*fr.Selective = true
@@ -20,8 +21,5 @@ func (fr *ForceReply) WithInputFieldPlaceholder(placeholder string) {
 	fr.InputFieldPlaceholder = &placeholder
 }
 
-func NewForceReply() *ForceReply {
-	return &ForceReply{
-		ForceReply: true,
-	}
-}
+// IsReplyMarkup - to satisfy ReplyMarkup interface
+func (fr *ForceReply) IsReplyMarkup() {}

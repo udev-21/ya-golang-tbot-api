@@ -1,7 +1,5 @@
 package types
 
-import "github.com/udev-21/golang-tbot-api/utils"
-
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`
 	ResizeKeyboard        *bool              `json:"resize_keyboard,omitempty"`
@@ -29,6 +27,5 @@ func (rkm *ReplyKeyboardMarkup) WithSelective() {
 	*rkm.Selective = true
 }
 
-func (rkm *ReplyKeyboardMarkup) RawJsonPayload() (map[string]interface{}, error) {
-	return utils.ConvertToMapStringInterface(rkm)
-}
+// IsReplyMarkup - to satisfy ReplyMarkup interface
+func (rkm *ReplyKeyboardMarkup) IsReplyMarkup() {}
