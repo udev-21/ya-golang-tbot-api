@@ -11,7 +11,7 @@ type ReplyMarkup interface {
 	IsReplyMarkup()
 }
 
-func (m *ReplyMarkuper) WithKeyboard(replyMarkup ReplyMarkup) {
+func (m *ReplyMarkuper) WithReplyMarkup(replyMarkup ReplyMarkup) {
 	m.ReplyMarkup = replyMarkup
 }
 
@@ -38,4 +38,8 @@ func (m *ParseModer) WithParseModeParseModeMarkdownV2() {
 func (m *ParseModer) WithParseModeParseModeMarkdown() {
 	m.ParseMode = new(string)
 	*m.ParseMode = ParseModeMarkdown
+}
+
+type Durationer struct {
+	Duration *int64 `json:"duration,omitempty"`
 }

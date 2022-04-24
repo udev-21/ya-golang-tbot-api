@@ -27,5 +27,9 @@ type Sendable interface {
 
 type UploadWithFiles interface {
 	Sendable
+	Filer
+}
+
+type Filer interface {
 	Files() []InputFile
 }

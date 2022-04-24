@@ -144,63 +144,97 @@ func hasFilesNeedingUpload(files []myTypes.InputFile) bool {
 	}
 	return false
 }
-func (ba *BotAPI) requestWithFiles(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
+
+func uploadFile(r *io.PipeReader, w *io.PipeWriter, uploadable myTypes.Uploadable, m *multipart.Writer) {
+	reader, err := uploadable.UploadData()
+	if err != nil {
+		w.CloseWithError(err)
+		return
+	}
+	part, err := m.CreateFormFile(uploadable.AttachName(), uploadable.AttachName())
+	if err != nil {
+		w.CloseWithError(err)
+		return
+	}
+
+	if _, err := io.Copy(part, reader); err != nil {
+		w.CloseWithError(err)
+		return
+	}
+
+	if closer, ok := reader.(io.ReadCloser); ok {
+		if err = closer.Close(); err != nil {
+			w.CloseWithError(err)
+			return
+		}
+	}
+}
+
+func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendable myTypes.UploadWithFiles) (*types.ApiResponse, error) {
 	r, w := io.Pipe()
 	m := multipart.NewWriter(w)
 
-	json.NewEncoder(os.Stdout).Encode(params)
+	json.NewEncoder(os.Stdout).Encode(sendable)
+
+	params, err := sendable.Params()
+	if err != nil {
+		return nil, err
+	}
+
+	if chat, ok := reciever.(types.Chat); ok {
+		if chat.ID != 0 {
+			params["chat_id"] = chat.ID
+		} else {
+			params["chat_id"] = chat.Username
+		}
+	} else if chat, ok := reciever.(*types.Chat); ok {
+		if chat.ID != 0 {
+			params["chat_id"] = chat.ID
+		} else {
+			params["chat_id"] = chat.Username
+		}
+	}
+
+	files := sendable.Files()
+	log.Println("filesizes", len(files))
 
 	go func() {
 		defer w.Close()
 		defer m.Close()
 
 		for field, value := range params {
-			if file, ok := value.(myTypes.Uploadable); ok {
-				name, reader, err := file.UploadData()
-				if err != nil {
+
+			if _, ok := value.(myTypes.InputFile); ok {
+				continue
+			}
+
+			if strval, ok := value.(string); ok {
+				if err := m.WriteField(field, strval); err != nil {
 					w.CloseWithError(err)
 					return
 				}
-
-				part, err := m.CreateFormFile(field, name)
-				if err != nil {
+			} else if strval, ok := value.(*string); ok {
+				if err := m.WriteField(field, *strval); err != nil {
 					w.CloseWithError(err)
 					return
-				}
-
-				if _, err := io.Copy(part, reader); err != nil {
-					w.CloseWithError(err)
-					return
-				}
-
-				if closer, ok := reader.(io.ReadCloser); ok {
-					if err = closer.Close(); err != nil {
-						w.CloseWithError(err)
-						return
-					}
 				}
 			} else {
-				if strval, ok := value.(string); ok {
-					if err := m.WriteField(field, strval); err != nil {
-						w.CloseWithError(err)
-						return
-					}
-				} else if strval, ok := value.(*string); ok {
-					if err := m.WriteField(field, *strval); err != nil {
-						w.CloseWithError(err)
-						return
-					}
-				} else {
-					val, err := json.Marshal(value)
-					if err != nil {
-						w.CloseWithError(err)
-						return
-					}
-					if err := m.WriteField(field, string(val)); err != nil {
-						w.CloseWithError(err)
-						return
-					}
+				val, err := json.Marshal(value)
+				log.Printf("field(%q) value(%s)", field, val)
+				if err != nil {
+					w.CloseWithError(err)
+					return
 				}
+				if err := m.WriteField(field, string(val)); err != nil {
+					w.CloseWithError(err)
+					return
+				}
+			}
+		}
+
+		for _, file := range files {
+			if f, ok := file.(myTypes.Uploadable); ok {
+				uploadFile(r, w, f, m)
 			}
 		}
 	}()
@@ -227,6 +261,7 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 	if err != nil {
 		return nil, err
 	}
+	// json.NewEncoder(os.Stdout).Encode(data)
 
 	if chat, ok := reciever.(types.Chat); ok {
 		if chat.ID != 0 {
@@ -240,16 +275,17 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 		} else {
 			data["chat_id"] = chat.Username
 		}
+	} else {
+		os.Exit(123)
 	}
 
 	// log.Println(data)
 
 	if payloadWithFiles, ok := payload.(myTypes.UploadWithFiles); ok {
 		if hasFilesNeedingUpload(payloadWithFiles.Files()) {
-			return ba.requestWithFiles(payload.Endpoint(), data)
+			return ba.requestWithFiles(reciever, payload.Endpoint(), payloadWithFiles)
 		}
 	}
-
 	return ba.request(payload.Endpoint(), data)
 
 }

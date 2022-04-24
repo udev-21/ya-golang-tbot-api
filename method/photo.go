@@ -11,7 +11,7 @@ type Photo struct {
 	Caption         *string               `json:"caption,omitempty"`
 	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
 
-	myTypes.ProtectContent
+	myTypes.ProtectContenter
 	myTypes.ReplyToMessager
 	myTypes.ReplyMarkuper
 	myTypes.ParseModer
@@ -35,6 +35,9 @@ func (p *Photo) Params() (myTypes.Params, error) {
 
 func (p *Photo) Files() []myTypes.InputFile {
 	var res []myTypes.InputFile
-	res = append(res, p.Photo)
+	if tmp, ok := p.Photo.(myTypes.Uploadable); ok {
+		tmp.SetAttachName("photo")
+		res = append(res, tmp)
+	}
 	return res
 }

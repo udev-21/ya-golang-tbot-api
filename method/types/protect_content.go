@@ -1,9 +1,9 @@
 package types
 
-type ProtectContent struct {
+type ProtectContenter struct {
 	ProtectContent_ bool `json:"protect_content,omitempty"`
 }
 
-func (pc *ProtectContent) ProtectContent() {
+func (pc *ProtectContenter) WithProtectContent() {
 	pc.ProtectContent_ = true
 }

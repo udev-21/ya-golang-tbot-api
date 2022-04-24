@@ -1,16 +1,14 @@
 package types
 
-import "github.com/udev-21/golang-tbot-api/types"
-
 type ReplyToMessager struct {
-	ReplyToMessageID         *int64 `json:"reply_to_message_id,omitempty"`
-	AllowSendingWithutReply_ bool   `json:"allow_sending_without_reply,omitempty"`
+	ReplyToMessageID        *int64 `json:"reply_to_message_id,omitempty"`
+	AllowSendingWithutReply bool   `json:"allow_sending_without_reply,omitempty"`
 }
 
-func (m *ReplyToMessager) ReplyToMessage(msg *types.Message) {
-	m.ReplyToMessageID = &msg.MessageID
+func (m *ReplyToMessager) WIthReplyToMessageID(id int64) {
+	m.ReplyToMessageID = &id
 }
 
-func (m *ReplyToMessager) AllowSendingWithutReply() {
-	m.AllowSendingWithutReply_ = true
+func (m *ReplyToMessager) WithAllowSendingWithutReply() {
+	m.AllowSendingWithutReply = true
 }

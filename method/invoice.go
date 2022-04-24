@@ -61,11 +61,10 @@ type Invoice struct {
 	SendEmailToProvider       *bool                `json:"send_email_to_provider,omitempty"`
 	IsFlexible                *bool                `json:"is_flexible,omitempty"`
 	DisableNotification       *bool                `json:"disable_notification,omitempty"`
-	ProtectContent            *bool                `json:"protect_content,omitempty"`
-	AllowSendingWithutReply   *bool                `json:"allow_sending_without_reply,omitempty"`
 
 	myTypes.ReplyMarkuper
 	myTypes.ReplyToMessager
+	myTypes.ProtectContenter
 }
 
 func (m *Invoice) WithMaxTipAmount(maxTipAmount int64) {
@@ -175,21 +174,4 @@ func (m *Invoice) WithDisableNotification() {
 		m.DisableNotification = new(bool)
 	}
 	*m.DisableNotification = true
-}
-func (m *Invoice) WithProtectContent() {
-	if m.ProtectContent == nil {
-		m.ProtectContent = new(bool)
-	}
-	*m.ProtectContent = true
-}
-
-func (m *Invoice) ReplyToMessage(msg types.Message) {
-	m.ReplyToMessageID = &msg.MessageID
-}
-
-func (m *Invoice) WithReplyMarkup(keyboard types.InlineKeyboardMarkup) {
-	if m.ReplyMarkup == nil {
-		m.ReplyMarkup = new(types.InlineKeyboardMarkup)
-	}
-	m.ReplyMarkup = &keyboard
 }

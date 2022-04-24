@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 // RequestFileData represents the data to be used for a file.
@@ -14,48 +15,55 @@ type InputFile interface {
 
 type Uploadable interface {
 	InputFile
+	AttachName() string
+	SetAttachName(string)
 
-	// UploadData gets the file_attach_name and an `io.Reader` for the file to be uploaded. This
-	// must only be called when the file needs to be uploaded.
-	UploadData() (string, io.Reader, error)
+	UploadData() (io.Reader, error)
 }
 
-// FileReader contains information about a reader to upload as a File.
-type FileReader struct {
-	Name   string
-	Reader io.Reader
+var _ Uploadable = &FilePath{}
+
+type FilePath struct {
+	Path       string
+	attachName string
 }
 
-func (fr FileReader) MarshalJSON() ([]byte, error) {
-	return json.Marshal(fr.Name)
+func NewFilePath(path string) *FilePath {
+	return &FilePath{
+		Path: path,
+	}
 }
-
-func (fr FileReader) UploadData() (string, io.Reader, error) {
-	return "attach://" + fr.Name, fr.Reader, nil
-}
-
-func (fr FileReader) IsInputFile() {}
-
-// FilePath is a path to a local file.
-type FilePath string
 
 func (fp FilePath) MarshalJSON() ([]byte, error) {
-	fileHandle, err := os.Open(string(fp))
+	if fp.attachName != "" {
+		return json.Marshal("attach://" + fp.attachName)
+	} else {
+		return json.Marshal(filepath.Base(fp.Path))
+	}
+}
+
+func (fp *FilePath) AttachName() string {
+	// 'asdf'
+	if fp.attachName != "" {
+		return fp.attachName
+	}
+	return filepath.Base(fp.Path)
+}
+
+func (fp *FilePath) SetAttachName(name string) {
+	fp.attachName = name
+}
+
+func (fp *FilePath) UploadData() (io.Reader, error) {
+	fileHandle, err := os.Open(string(fp.Path))
 	if err != nil {
 		return nil, err
 	}
-	return json.Marshal(fileHandle.Name())
+
+	return fileHandle, nil
 }
 
-func (fp FilePath) UploadData() (string, io.Reader, error) {
-	fileHandle, err := os.Open(string(fp))
-	if err != nil {
-		return "", nil, err
-	}
-	return "attach://" + fileHandle.Name(), fileHandle, err
-}
-
-func (fp FilePath) IsInputFile() {}
+func (fp *FilePath) IsInputFile() {}
 
 // FileURL is a URL to use as a file for a request.
 type FileURL string

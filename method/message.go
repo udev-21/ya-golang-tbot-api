@@ -44,7 +44,7 @@ type Message struct {
 	Entities              []types.MessageEntity `json:"entities,omitempty"`
 	DisableWebPagePreview *bool                 `json:"disable_web_page_preview,omitempty"`
 
-	myTypes.ProtectContent
+	myTypes.ProtectContenter
 	myTypes.ReplyMarkuper
 	myTypes.ParseModer
 	myTypes.ReplyToMessager
