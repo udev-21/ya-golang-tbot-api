@@ -10,12 +10,11 @@ type InputMedia interface {
 }
 
 type BaseInputMedia struct {
-	Type    string    `json:"type"`
-	Media   InputFile `json:"media"`
-	Caption *string   `json:"caption,omitempty"`
+	Type  string    `json:"type"`
+	Media InputFile `json:"media"`
 
 	ParseModer
-	CaptionEntitier
+	Captioner
 }
 
 func (b *BaseInputMedia) IsInputMedia() {}
