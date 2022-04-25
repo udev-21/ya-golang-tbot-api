@@ -25,15 +25,11 @@ func NewInvoice(
 	}
 }
 
-func (m *Invoice) RawJsonPayload() (map[string]interface{}, error) {
+func (m *Invoice) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(m)
 }
 
-func (m *Invoice) UploadFiles() map[string]types.InputFile {
-	return nil
-}
-
-func (m *Invoice) GetEndpoint() string {
+func (m *Invoice) Endpoint() string {
 	return "sendInvoice"
 }
 

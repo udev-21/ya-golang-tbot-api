@@ -1,17 +1,17 @@
 package types
 
-func NewKeyboardRow(buttons ...KeyboardButton) []KeyboardButton {
+func NewKeyboardRow(buttons ...*KeyboardButton) []*KeyboardButton {
 	return buttons
 }
 
-func NewKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
+func NewKeyboard(rows ...[]*KeyboardButton) *ReplyKeyboardMarkup {
 	return &ReplyKeyboardMarkup{
 		Keyboard: rows,
 	}
 }
 
-func NewKeyboardButton(text string) KeyboardButton {
-	return KeyboardButton{
+func NewKeyboardButton(text string) *KeyboardButton {
+	return &KeyboardButton{
 		Text: text,
 	}
 }

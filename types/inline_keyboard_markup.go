@@ -1,7 +1,7 @@
 package types
 
 type InlineKeyboardMarkup struct {
-	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+	InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"`
 }
 
 // IsReplyMarkup - to satisfy ReplyMarkup interface

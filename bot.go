@@ -58,6 +58,9 @@ func (ba *BotAPI) WithLogger(logger *log.Logger) *BotAPI {
 	return ba
 }
 
+func (ba *BotAPI) GetMe() (*types.ApiResponse, error) {
+	return ba.request("getMe", map[string]interface{}{})
+}
 func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
 
 	// bodyMap, err := payload.Params()

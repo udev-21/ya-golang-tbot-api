@@ -43,6 +43,7 @@ func (p *Document) Files() []myTypes.InputFile {
 		res = append(res, tmp)
 	}
 	if tmp, ok := p.Thumb.(myTypes.Uploadable); ok {
+		tmp.SetField("thumb")
 		res = append(res, tmp)
 	}
 	return res

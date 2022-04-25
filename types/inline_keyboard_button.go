@@ -1,17 +1,17 @@
 package types
 
-func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButton {
+func NewInlineKeyboardRow(buttons ...*InlineKeyboardButton) []*InlineKeyboardButton {
 	return buttons
 }
 
-func NewInlineKeyboard(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup {
+func NewInlineKeyboard(rows ...[]*InlineKeyboardButton) *InlineKeyboardMarkup {
 	return &InlineKeyboardMarkup{
 		InlineKeyboard: rows,
 	}
 }
 
-func NewInlineKeyboardButton(text string) InlineKeyboardButton {
-	return InlineKeyboardButton{
+func NewInlineKeyboardButton(text string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
 		Text: text,
 	}
 }
