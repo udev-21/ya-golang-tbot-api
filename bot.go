@@ -23,7 +23,7 @@ type BotAPI struct {
 	httpClient      *http.Client
 	token           string
 	debug           bool
-	logger          log.Logger
+	logger          *log.Logger
 	privateKey      rsa.PrivateKey
 	testEnvironment bool
 
@@ -41,7 +41,7 @@ func NewBotAPI(token string) *BotAPI {
 		poller:     NewLongPoller(),
 		updates:    make(chan types.Update, 200),
 	}
-	res.telegramAPIUrl = fmt.Sprintf("https://api.telegram.org/bot%s/", token)
+	res.telegramAPIUrl = "https://api.telegram.org/bot" + token + "/"
 	return &res
 }
 
@@ -53,20 +53,24 @@ func (ba *BotAPI) WithPrivateKey(privKey rsa.PrivateKey) *BotAPI {
 	ba.privateKey = privKey
 	return ba
 }
+func (ba *BotAPI) WithLogger(logger *log.Logger) *BotAPI {
+	ba.logger = logger
+	return ba
+}
 
 func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
 
-	bodyMap, err := payload.Params()
+	// bodyMap, err := payload.Params()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	body, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := json.Marshal(bodyMap)
-	if err != nil {
-		return nil, err
-	}
-
-	request, err := http.NewRequest(http.MethodPost, ba.getPath("getUpdates"), bytes.NewBuffer(body))
+	request, err := http.NewRequest(http.MethodPost, ba.getPath(payload.Endpoint()), bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, fmt.Errorf("prepare request error")
@@ -151,7 +155,7 @@ func uploadFile(r *io.PipeReader, w *io.PipeWriter, uploadable myTypes.Uploadabl
 		w.CloseWithError(err)
 		return
 	}
-	part, err := m.CreateFormFile(uploadable.AttachName(), uploadable.AttachName())
+	part, err := m.CreateFormFile(uploadable.Field(), uploadable.FileName())
 	if err != nil {
 		w.CloseWithError(err)
 		return
@@ -174,7 +178,7 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 	r, w := io.Pipe()
 	m := multipart.NewWriter(w)
 
-	json.NewEncoder(os.Stdout).Encode(sendable)
+	// json.NewEncoder(os.Stdout).Encode(sendable)
 
 	params, err := sendable.Params()
 	if err != nil {
@@ -196,7 +200,6 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 	}
 
 	files := sendable.Files()
-	log.Println("filesizes", len(files))
 
 	go func() {
 		defer w.Close()
@@ -204,7 +207,7 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 
 		for field, value := range params {
 
-			if _, ok := value.(myTypes.InputFile); ok {
+			if _, ok := value.(myTypes.Uploadable); ok {
 				continue
 			}
 
@@ -261,7 +264,6 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 	if err != nil {
 		return nil, err
 	}
-	// json.NewEncoder(os.Stdout).Encode(data)
 
 	if chat, ok := reciever.(types.Chat); ok {
 		if chat.ID != 0 {
@@ -300,9 +302,12 @@ func (b BotAPI) getPath(endpoint string) string {
 
 func (b *BotAPI) Start() {
 	if b.poller == nil {
-		panic("telebot: can't start without a poller")
+		panic("golangtbotapi: can't start without a poller")
+	} else if b.logger == nil {
+		panic("golangtbotapi: can't start without logger")
 	}
-	log.Println("starting bot long polling")
+
+	writeLog(LogLevelInfo, b.logger, "starting bot long polling")
 	stop := make(chan struct{})
 	stopConfirm := make(chan struct{})
 

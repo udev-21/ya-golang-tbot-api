@@ -12,7 +12,7 @@ type Poller interface {
 }
 
 type internalLongPoller struct {
-	updates method.GetUpdates
+	updateCnf method.GetUpdates
 }
 
 func NewLongPoller() Poller {
@@ -22,30 +22,29 @@ func NewLongPoller() Poller {
 // Poll does long polling.
 func (p *internalLongPoller) Poll(b *BotAPI, dest chan types.Update, stop chan struct{}) {
 	for {
+
 		select {
 		case <-stop:
 			return
 		default:
 		}
-		updates, err := b.GetUpdates(&p.updates)
 
-		if err != nil {
-			// b.debug(err)
-			continue
-		}
-
-		for _, update := range updates {
-			p.updates.Offset = update.UpdateID
-			dest <- update
-		}
-
-		time.Sleep(10 * time.Millisecond)
-
-		if len(updates) > 0 {
-			p.updates.Offset++
-		} else {
+		updates, err := b.GetUpdates(&p.updateCnf)
+		if len(updates) == 0 {
 			time.Sleep(10 * time.Millisecond)
 		}
 
+		if err != nil {
+			writeLog(LogLevelError, b.logger, "can't get updates")
+			continue
+		}
+
+		if len(updates) > 0 {
+			for _, update := range updates {
+				p.updateCnf.Offset = update.UpdateID
+				dest <- update
+			}
+			p.updateCnf.Offset++
+		}
 	}
 }

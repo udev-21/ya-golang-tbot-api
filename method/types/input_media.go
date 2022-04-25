@@ -37,10 +37,10 @@ type InputMediaPhoto struct {
 
 type InputMediaVideo struct {
 	BaseInputMedia
-	Thumb             *InputFile `json:"thumb,omitempty"`
-	Width             *int64     `json:"width,omitempty"`
-	Height            *int64     `json:"height,omitempty"`
-	SupportsStreaming bool       `json:"supports_streaming,omitempty"`
+	Thumb             InputFile `json:"thumb,omitempty"`
+	Width             *int64    `json:"width,omitempty"`
+	Height            *int64    `json:"height,omitempty"`
+	SupportsStreaming bool      `json:"supports_streaming,omitempty"`
 	Durationer
 }
 
@@ -51,16 +51,16 @@ func (bmv *InputMediaVideo) Params() (Params, error) {
 func (imv *InputMediaVideo) Files() []InputFile {
 	files := imv.BaseInputMedia.Files()
 	if imv.Thumb != nil {
-		files = append(files, *imv.Thumb)
+		files = append(files, imv.Thumb)
 	}
 	return files
 }
 
 type InputMediaAnimation struct {
 	BaseInputMedia
-	Thumb  *InputFile `json:"thumb,omitempty"`
-	Width  *int64     `json:"width,omitempty"`
-	Height *int64     `json:"height,omitempty"`
+	Thumb  InputFile `json:"thumb,omitempty"`
+	Width  *int64    `json:"width,omitempty"`
+	Height *int64    `json:"height,omitempty"`
 	Durationer
 }
 
@@ -71,7 +71,7 @@ func (ima *InputMediaAnimation) Params() (Params, error) {
 func (ima *InputMediaAnimation) Files() []InputFile {
 	files := ima.BaseInputMedia.Files()
 	if ima.Thumb != nil {
-		files = append(files, *ima.Thumb)
+		files = append(files, ima.Thumb)
 	}
 	return files
 }
@@ -79,9 +79,9 @@ func (ima *InputMediaAnimation) Files() []InputFile {
 type InputMediaAudio struct {
 	BaseInputMedia
 	Durationer
-	Thumb     *InputFile `json:"thumb,omitempty"`
-	Performer *string    `json:"performer,omitempty"`
-	Title     *string    `json:"title,omitempty"`
+	Thumb     InputFile `json:"thumb,omitempty"`
+	Performer *string   `json:"performer,omitempty"`
+	Title     *string   `json:"title,omitempty"`
 }
 
 func (ima *InputMediaAudio) Params() (Params, error) {
@@ -91,15 +91,15 @@ func (ima *InputMediaAudio) Params() (Params, error) {
 func (ima *InputMediaAudio) Files() []InputFile {
 	files := ima.BaseInputMedia.Files()
 	if ima.Thumb != nil {
-		files = append(files, *ima.Thumb)
+		files = append(files, ima.Thumb)
 	}
 	return files
 }
 
 type InputMediaDocument struct {
 	BaseInputMedia
-	Thumb                       *InputFile `json:"thumb,omitempty"`
-	DisableContentTypeDetection bool       `json:"disable_content_type_detection,omitempty"`
+	Thumb                       InputFile `json:"thumb,omitempty"`
+	DisableContentTypeDetection bool      `json:"disable_content_type_detection,omitempty"`
 }
 
 func (document *InputMediaDocument) Params() (Params, error) {

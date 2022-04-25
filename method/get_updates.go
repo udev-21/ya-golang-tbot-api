@@ -8,7 +8,7 @@ import (
 )
 
 type GetUpdates struct {
-	Offset         int64    `json:"offset,omitempty"`
+	Offset         int64    `json:"offset"`
 	Limit          *int64   `json:"limit,omitempty"`
 	Timeout        *int64   `json:"timeout,omitempty"`
 	AllowedUpdates []string `json:"allowed_updates,omitempty"`

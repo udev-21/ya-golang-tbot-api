@@ -15,8 +15,11 @@ type InputFile interface {
 
 type Uploadable interface {
 	InputFile
-	AttachName() string
-	SetAttachName(string)
+	CustomFileName() string
+	FileName() string
+	SetCustomFileName(string)
+	SetField(string)
+	Field() string
 
 	UploadData() (io.Reader, error)
 }
@@ -24,8 +27,9 @@ type Uploadable interface {
 var _ Uploadable = &FilePath{}
 
 type FilePath struct {
-	Path       string
-	attachName string
+	Path           string
+	customFileName string
+	fieldName      string
 }
 
 func NewFilePath(path string) *FilePath {
@@ -35,23 +39,35 @@ func NewFilePath(path string) *FilePath {
 }
 
 func (fp FilePath) MarshalJSON() ([]byte, error) {
-	if fp.attachName != "" {
-		return json.Marshal("attach://" + fp.attachName)
+	if fp.customFileName != "" {
+		return json.Marshal("attach://" + fp.customFileName)
 	} else {
 		return json.Marshal(filepath.Base(fp.Path))
 	}
 }
 
-func (fp *FilePath) AttachName() string {
-	// 'asdf'
-	if fp.attachName != "" {
-		return fp.attachName
-	}
-	return filepath.Base(fp.Path)
+func (fp *FilePath) CustomFileName() string {
+	return fp.customFileName
 }
 
-func (fp *FilePath) SetAttachName(name string) {
-	fp.attachName = name
+func (fp *FilePath) FileName() string {
+	if fp.customFileName != "" {
+		return fp.customFileName
+	} else {
+		return filepath.Base(fp.Path)
+	}
+}
+
+func (fp *FilePath) SetCustomFileName(name string) {
+	fp.customFileName = name
+}
+
+func (fp *FilePath) SetField(field string) {
+	fp.fieldName = field
+}
+
+func (fp *FilePath) Field() string {
+	return fp.fieldName
 }
 
 func (fp *FilePath) UploadData() (io.Reader, error) {
@@ -71,6 +87,6 @@ type FileURL string
 func (fu FileURL) IsInputFile() {}
 
 // FileID is an ID of a file already uploaded to Telegram.
-type FileID string
+type FileID FileURL
 
 func (fi FileID) IsInputFile() {}

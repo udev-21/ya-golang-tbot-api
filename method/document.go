@@ -6,11 +6,14 @@ import (
 	"github.com/udev-21/golang-tbot-api/utils"
 )
 
-type Photo struct {
-	Photo           myTypes.InputFile     `json:"photo"`
+type Document struct {
+	Document        myTypes.InputFile     `json:"document"`
 	Caption         *string               `json:"caption,omitempty"`
 	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
 
+	DisableContentTypeDetection bool `json:"disable_content_type_detection,omitempty"`
+
+	myTypes.Thumber
 	myTypes.ProtectContenter
 	myTypes.ReplyToMessager
 	myTypes.ReplyMarkuper
@@ -18,25 +21,28 @@ type Photo struct {
 	myTypes.DisableNotificationer
 }
 
-func (p *Photo) Endpoint() string {
-	return "sendPhoto"
+func (p *Document) Endpoint() string {
+	return "sendDocument"
 }
 
-func (p *Photo) Params() (myTypes.Params, error) {
+func (p *Document) Params() (myTypes.Params, error) {
 	var params myTypes.Params
 	var err error
 	params, err = utils.ConvertToMapStringInterface(p)
 	if err != nil {
 		return nil, err
 	}
-	params["photo"] = p.Photo
+	params["document"] = p.Document
 	return params, nil
 }
 
-func (p *Photo) Files() []myTypes.InputFile {
+func (p *Document) Files() []myTypes.InputFile {
 	var res []myTypes.InputFile
-	if tmp, ok := p.Photo.(myTypes.Uploadable); ok {
-		tmp.SetField("photo")
+	if tmp, ok := p.Document.(myTypes.Uploadable); ok {
+		tmp.SetField("document")
+		res = append(res, tmp)
+	}
+	if tmp, ok := p.Thumb.(myTypes.Uploadable); ok {
 		res = append(res, tmp)
 	}
 	return res

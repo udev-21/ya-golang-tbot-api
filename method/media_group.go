@@ -1,7 +1,7 @@
 package method
 
 import (
-	"fmt"
+	"strconv"
 
 	myTypes "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/utils"
@@ -37,7 +37,6 @@ func prepareInputMediaFiles(inputMedias []myTypes.InputMedia) []myTypes.InputFil
 	var newFiles []myTypes.InputFile
 
 	for idx, media := range inputMedias {
-		// log.Printf("\n%+v\n", media)
 		if files := prepareInputMediaFile(media, idx); len(files) > 0 {
 			newFiles = append(newFiles, files...)
 		}
@@ -51,59 +50,60 @@ func prepareInputMediaFile(inputMedia myTypes.InputMedia, idx int) []myTypes.Inp
 	switch m := inputMedia.(type) {
 	case *myTypes.InputMediaPhoto:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("attach://file_%d", idx))
+			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
 		} else {
 			files = append(files, m.Media)
 		}
 	case *myTypes.InputMediaVideo:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("attach://file_%d", idx))
+			tmp.SetField(tmp.CustomFileName())
+
 			files = append(files, tmp)
 		} else {
 			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("attach://file_%d_thumb", idx))
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
 			} else {
-				files = append(files, *m.Thumb)
+				files = append(files, m.Thumb)
 			}
 		}
 	case *myTypes.InputMediaDocument:
 
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("attach://file_%d", idx))
+			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
 		} else {
 			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("attach://file_%d_thumb", idx))
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
 			} else {
-				files = append(files, *m.Thumb)
+				files = append(files, m.Thumb)
 			}
 		}
 	case *myTypes.InputMediaAudio:
 
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("attach://file_%d", idx))
+			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
 		} else {
 			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("attach://file_%d_thumb", idx))
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
 			} else {
-				files = append(files, *m.Thumb)
+				files = append(files, m.Thumb)
 			}
 		}
 
@@ -123,54 +123,53 @@ func prepareInputMediaForParams(inputMedia []myTypes.InputMedia) []myTypes.Input
 	return newMedia
 }
 
-// It is expected to be used in conjunction with prepareInputMediaFile.
 func prepareInputMediaParam(inputMedia myTypes.InputMedia, idx int) myTypes.InputMedia {
-
 	switch m := inputMedia.(type) {
 	case *myTypes.InputMediaPhoto:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("file_%d", idx))
+			tmp.SetCustomFileName(tmp.FileName())
 			m.Media = tmp
 		}
+
 		return m
 	case *myTypes.InputMediaVideo:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("file_%d", idx))
+			tmp.SetCustomFileName(tmp.FileName())
 			m.Media = tmp
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("file_%d_thumb", idx))
-				*m.Thumb = tmp
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetCustomFileName("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
+				m.Thumb = tmp
 			}
 		}
 
 		return m
 	case *myTypes.InputMediaAudio:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("file_%d", idx))
+			tmp.SetCustomFileName(tmp.FileName())
 			m.Media = tmp
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("file_%d_thumb", idx))
-				*m.Thumb = tmp
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetCustomFileName("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
+				m.Thumb = tmp
 			}
 		}
 
 		return m
 	case *myTypes.InputMediaDocument:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
-			tmp.SetAttachName(fmt.Sprintf("file_%d", idx))
+			tmp.SetCustomFileName(tmp.FileName())
 			m.Media = tmp
 		}
 
 		if m.Thumb != nil {
-			if tmp, ok := (*m.Thumb).(myTypes.Uploadable); ok {
-				tmp.SetAttachName(fmt.Sprintf("file_%d_thumb", idx))
-				*m.Thumb = tmp
+			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
+				tmp.SetCustomFileName("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
+				m.Thumb = tmp
 			}
 		}
 		return m
