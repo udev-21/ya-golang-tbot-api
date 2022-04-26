@@ -25,32 +25,32 @@ type Document struct {
 	myTypes.DisableNotificationer
 }
 
-func (p *Document) WithDisableContentTypeDetection() {
-	p.DisableContentTypeDetection = true
+func (d *Document) WithDisableContentTypeDetection() {
+	d.DisableContentTypeDetection = true
 }
 
-func (p *Document) Endpoint() string {
+func (d *Document) Endpoint() string {
 	return "sendDocument"
 }
 
-func (p *Document) Params() (myTypes.Params, error) {
+func (d *Document) Params() (myTypes.Params, error) {
 	var params myTypes.Params
 	var err error
-	params, err = utils.ConvertToMapStringInterface(p)
+	params, err = utils.ConvertToMapStringInterface(d)
 	if err != nil {
 		return nil, err
 	}
-	params["document"] = p.Document
+	params["document"] = d.Document
 	return params, nil
 }
 
-func (p *Document) Files() []myTypes.InputFile {
+func (d *Document) Files() []myTypes.InputFile {
 	var res []myTypes.InputFile
-	if tmp, ok := p.Document.(myTypes.Uploadable); ok {
+	if tmp, ok := d.Document.(myTypes.Uploadable); ok {
 		tmp.SetField("document")
 		res = append(res, tmp)
 	}
-	if tmp, ok := p.Thumb.(myTypes.Uploadable); ok {
+	if tmp, ok := d.Thumb.(myTypes.Uploadable); ok {
 		tmp.SetField("thumb")
 		res = append(res, tmp)
 	}

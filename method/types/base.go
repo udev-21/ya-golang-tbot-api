@@ -1,14 +1,11 @@
 package types
 
-type RawJsonPayloader interface {
-	RawJsonPayload() (map[string]interface{}, error)
-}
-type ReplyMarkuper struct {
-	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
-}
-
 type ReplyMarkup interface {
 	IsReplyMarkup()
+}
+
+type ReplyMarkuper struct {
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 func (m *ReplyMarkuper) WithReplyMarkup(replyMarkup ReplyMarkup) {
@@ -42,4 +39,8 @@ func (m *ParseModer) WithParseModeParseModeMarkdown() {
 
 type Durationer struct {
 	Duration *int64 `json:"duration,omitempty"`
+}
+
+func (d *Durationer) WithDuration(duration int64) {
+	d.Duration = &duration
 }
