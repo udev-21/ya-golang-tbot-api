@@ -12,6 +12,7 @@ func NewForwardMessage(fromChatID string, messageID int64) *ForwardMessage {
 	}
 }
 
+// https://core.telegram.org/bots/api#forwardmessage
 type ForwardMessage struct {
 	FromChatID string `json:"from_chat_id"`
 	MessageID  int64  `json:"message_id"`
@@ -20,10 +21,10 @@ type ForwardMessage struct {
 	myTypes.ProtectContenter
 }
 
-func (a *ForwardMessage) Endpoint() string {
-	return "ForwardMessage"
+func (fm *ForwardMessage) Endpoint() string {
+	return "forwardMessage"
 }
 
-func (a *ForwardMessage) Params() (myTypes.Params, error) {
-	return utils.ConvertToMapStringInterface(a)
+func (fm *ForwardMessage) Params() (myTypes.Params, error) {
+	return utils.ConvertToMapStringInterface(fm)
 }

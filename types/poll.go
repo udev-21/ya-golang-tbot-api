@@ -1,7 +1,7 @@
 package types
 
 type Poll struct {
-	ID                    int64           `json:"id"`
+	ID                    string          `json:"id"`
 	Question              string          `json:"question"`
 	Options               []PollOption    `json:"options"`
 	TotalVoterCount       int64           `json:"total_voter_count"`

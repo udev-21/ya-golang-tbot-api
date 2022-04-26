@@ -12,6 +12,7 @@ func NewCopyMessage(fromChatID string, messageID int64) *CopyMessage {
 	}
 }
 
+// https://core.telegram.org/bots/api#copymessage
 type CopyMessage struct {
 	FromChatID string `json:"from_chat_id"`
 	MessageID  int64  `json:"message_id"`
