@@ -11,7 +11,7 @@ func NewUnpinAllChatMessages() *UnpinAllChatMessages {
 type UnpinAllChatMessages struct{}
 
 func (upcm *UnpinAllChatMessages) Endpoint() string {
-	return "unpinChatMessage"
+	return "unpinAllChatMessages"
 }
 
 func (uacm *UnpinAllChatMessages) Params() (myTypes.Params, error) {
