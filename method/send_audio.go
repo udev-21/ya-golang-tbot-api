@@ -27,38 +27,38 @@ type Audio struct {
 	myTypes.ReplyMarkuper
 }
 
-func (p *Audio) Endpoint() string {
+func (a *Audio) Endpoint() string {
 	return "sendAudio"
 }
 
-func (p *Audio) Params() (myTypes.Params, error) {
+func (a *Audio) Params() (myTypes.Params, error) {
 	var params myTypes.Params
 	var err error
-	params, err = utils.ConvertToMapStringInterface(p)
+	params, err = utils.ConvertToMapStringInterface(a)
 	if err != nil {
 		return nil, err
 	}
-	params["audio"] = p.Audio
+	params["audio"] = a.Audio
 	return params, nil
 }
 
-func (p *Audio) Files() []myTypes.InputFile {
+func (a *Audio) Files() []myTypes.InputFile {
 	var res []myTypes.InputFile
-	if tmp, ok := p.Audio.(myTypes.Uploadable); ok {
+	if tmp, ok := a.Audio.(myTypes.Uploadable); ok {
 		tmp.SetField("audio")
 		res = append(res, tmp)
 	}
-	if tmp, ok := p.Thumb.(myTypes.Uploadable); ok {
+	if tmp, ok := a.Thumb.(myTypes.Uploadable); ok {
 		tmp.SetField("thumb")
 		res = append(res, tmp)
 	}
 	return res
 }
 
-func (p *Audio) WithPerformer(performer string) {
-	p.Performer = &performer
+func (a *Audio) WithPerformer(performer string) {
+	a.Performer = &performer
 }
 
-func (p *Audio) WithTitle(title string) {
-	p.Title = &title
+func (a *Audio) WithTitle(title string) {
+	a.Title = &title
 }
