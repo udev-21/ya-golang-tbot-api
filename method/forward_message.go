@@ -1,0 +1,29 @@
+package method
+
+import (
+	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+	"github.com/udev-21/golang-tbot-api/utils"
+)
+
+func NewForwardMessage(fromChatID string, messageID int64) *ForwardMessage {
+	return &ForwardMessage{
+		FromChatID: fromChatID,
+		MessageID:  messageID,
+	}
+}
+
+type ForwardMessage struct {
+	FromChatID string `json:"from_chat_id"`
+	MessageID  int64  `json:"message_id"`
+
+	myTypes.DisableNotificationer
+	myTypes.ProtectContenter
+}
+
+func (a *ForwardMessage) Endpoint() string {
+	return "ForwardMessage"
+}
+
+func (a *ForwardMessage) Params() (myTypes.Params, error) {
+	return utils.ConvertToMapStringInterface(a)
+}
