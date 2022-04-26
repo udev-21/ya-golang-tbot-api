@@ -30,7 +30,7 @@ const (
 )
 
 func (sca *ChatAction) Endpoint() string {
-	return "ChatAction"
+	return "sendChatAction"
 }
 
 func (sca *ChatAction) Params() (myTypes.Params, error) {
