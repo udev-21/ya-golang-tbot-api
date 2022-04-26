@@ -11,6 +11,7 @@ func NewSetChatTitle(title string) *SetChatTitle {
 	}
 }
 
+// https://core.telegram.org/bots/api#setchattitle
 type SetChatTitle struct {
 	Title string `json:"title"`
 }
