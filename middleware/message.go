@@ -16,7 +16,7 @@ func Message(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 func OnMessage(text string) golangtbotapi.Middleware {
 	return func(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 		return Message(func(ctx golangtbotapi.Context) error {
-			if *ctx.Message().Text == text {
+			if ctx.Message().Text != nil && *ctx.Message().Text == text {
 				next(ctx)
 			}
 			return nil
