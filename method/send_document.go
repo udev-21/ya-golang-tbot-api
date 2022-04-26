@@ -2,23 +2,31 @@ package method
 
 import (
 	myTypes "github.com/udev-21/golang-tbot-api/method/types"
-	"github.com/udev-21/golang-tbot-api/types"
 	"github.com/udev-21/golang-tbot-api/utils"
 )
 
+func NewSendDocument(document myTypes.InputFile) *Document {
+	return &Document{
+		Document: document,
+	}
+}
+
+// https://core.telegram.org/bots/api#senddocument
 type Document struct {
-	Document        myTypes.InputFile     `json:"document"`
-	Caption         *string               `json:"caption,omitempty"`
-	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
+	Document                    myTypes.InputFile `json:"document"`
+	DisableContentTypeDetection bool              `json:"disable_content_type_detection,omitempty"`
 
-	DisableContentTypeDetection bool `json:"disable_content_type_detection,omitempty"`
-
+	myTypes.Captioner
 	myTypes.Thumber
 	myTypes.ProtectContenter
 	myTypes.ReplyToMessager
 	myTypes.ReplyMarkuper
 	myTypes.ParseModer
 	myTypes.DisableNotificationer
+}
+
+func (p *Document) WithDisableContentTypeDetection() {
+	p.DisableContentTypeDetection = true
 }
 
 func (p *Document) Endpoint() string {
