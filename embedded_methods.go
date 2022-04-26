@@ -3,6 +3,7 @@ package golangtbotapi
 import (
 	"encoding/json"
 	"io"
+	"strconv"
 
 	"github.com/udev-21/golang-tbot-api/types"
 )
@@ -85,6 +86,34 @@ func (ba *BotAPI) DownloadFile(file *types.File, dest io.Writer) error {
 	_, err = io.Copy(dest, res.Body)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func (ba *BotAPI) LeaveChat(chat *types.Chat) error {
+	if chat == nil {
+		return newError("chat is required")
+	}
+	var chatID string
+	if chat.ID == 0 {
+		if chat.Username == nil || len(*chat.Username) == 0 {
+			return newError("chat is required")
+		}
+		chatID = *chat.Username
+	} else {
+		chatID = strconv.FormatInt(chat.ID, 10)
+	}
+
+	res, err := ba.request("leaveChat", map[string]interface{}{
+		"chat_id": chatID,
+	})
+
+	if err != nil {
+		return newError(err.Error())
+	}
+
+	if !res.OK {
+		return newError("not leaved")
 	}
 	return nil
 }
