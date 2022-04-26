@@ -11,7 +11,7 @@ func NewSendAnimation(animation myTypes.InputFile) *Animation {
 	}
 }
 
-// https://core.telegram.org/bots/api#sendAnimation
+// https://core.telegram.org/bots/api#sendanimation
 type Animation struct {
 	Animation myTypes.InputFile `json:"Animation"`
 	Width     *int64            `json:"width,omitempty"`

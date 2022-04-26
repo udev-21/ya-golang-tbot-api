@@ -7,6 +7,7 @@ import (
 	"github.com/udev-21/golang-tbot-api/utils"
 )
 
+// https://core.telegram.org/bots/api#sendmediagroup
 type MediaGroup struct {
 	Media []myTypes.InputMedia `json:"media"`
 

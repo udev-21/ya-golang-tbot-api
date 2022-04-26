@@ -11,7 +11,7 @@ func NewSendVideo(video myTypes.InputFile) *Video {
 	}
 }
 
-// https://core.telegram.org/bots/api#sendVideo
+// https://core.telegram.org/bots/api#sendvideo
 type Video struct {
 	Video             myTypes.InputFile `json:"video"`
 	Width             *int64            `json:"width,omitempty"`
