@@ -117,3 +117,30 @@ func (ba *BotAPI) LeaveChat(chat *types.Chat) error {
 	}
 	return nil
 }
+
+func (ba *BotAPI) GetChat(chatID string) (*types.Chat, error) {
+	if len(chatID) == 0 {
+		writeLog(LogLevelError, ba.logger, "chat is required")
+		return nil, newError("chat is required")
+	}
+
+	res, err := ba.request("getChat", map[string]interface{}{
+		"chat_id": chatID,
+	})
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	var response types.Chat
+	bytes, err := json.Marshal(res.Result)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+	if err = json.Unmarshal(bytes, &response); err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+	return &response, nil
+}
