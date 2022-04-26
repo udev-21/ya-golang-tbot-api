@@ -41,7 +41,7 @@ func NewBotAPI(token string) *BotAPI {
 		poller:     NewLongPoller(),
 		updates:    make(chan types.Update, 200),
 	}
-	res.telegramAPIUrl = "https://api.telegram.org/bot" + token + "/"
+	res.telegramAPIUrl = "https://api.telegram.org/"
 	return &res
 }
 
@@ -58,15 +58,7 @@ func (ba *BotAPI) WithLogger(logger *log.Logger) *BotAPI {
 	return ba
 }
 
-func (ba *BotAPI) GetMe() (*types.ApiResponse, error) {
-	return ba.request("getMe", map[string]interface{}{})
-}
 func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
-
-	// bodyMap, err := payload.Params()
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	body, err := json.Marshal(payload)
 	if err != nil {
@@ -93,7 +85,7 @@ func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
 	defer response.Body.Close()
 	err = json.NewDecoder(response.Body).Decode(&res)
 	if err != nil {
-		return nil, fmt.Errorf("parse response error")
+		return nil, fmt.Errorf("parse response error: " + err.Error())
 	}
 
 	if !res.OK {
@@ -295,19 +287,26 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 
 }
 
-func (b BotAPI) getPath(endpoint string) string {
-	middle := ""
+func (b *BotAPI) getPath(endpoint string) string {
+	middle := "/"
 	if b.testEnvironment {
-		middle = "test/"
+		middle = "/test/"
 	}
-	return b.telegramAPIUrl + middle + endpoint
+	log.Println(b.telegramAPIUrl + "bot" + b.token + middle + endpoint)
+	return b.telegramAPIUrl + "bot" + b.token + middle + endpoint
+}
+
+func (b *BotAPI) getFilePath(filePath string) string {
+	middle := "/"
+	if b.testEnvironment {
+		middle = "/test/"
+	}
+	return b.telegramAPIUrl + "file/bot" + b.token + middle + filePath
 }
 
 func (b *BotAPI) Start() {
 	if b.poller == nil {
 		panic("golangtbotapi: can't start without a poller")
-	} else if b.logger == nil {
-		panic("golangtbotapi: can't start without logger")
 	}
 
 	writeLog(LogLevelInfo, b.logger, "starting bot long polling")

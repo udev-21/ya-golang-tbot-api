@@ -12,6 +12,9 @@ const (
 )
 
 func writeLog(level int, to *log.Logger, format string, v ...interface{}) {
+	if to == nil {
+		return
+	}
 	res := "[UnknownLogLevel]: "
 	switch level {
 	case LogLevelInfo:
