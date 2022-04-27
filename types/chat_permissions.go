@@ -15,6 +15,7 @@ type ChatPermissions struct {
 func (cp *ChatPermissions) WithCanSendMessages() {
 	cp.CanSendMessages = true
 }
+
 func (cp *ChatPermissions) WithCanSendMediaMessages() {
 	cp.CanSendMediaMessages = true
 }
