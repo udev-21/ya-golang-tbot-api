@@ -1,7 +1,7 @@
 package method
 
 import (
-	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 )
 
 func NewUnpinAllChatMessages() *UnpinAllChatMessages {

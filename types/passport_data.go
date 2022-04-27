@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/udev-21/golang-tbot-api/types/passport"
+	"github.com/udev-21/ya-golang-tbot-api/types/passport"
 )
 
 type PassportData struct {

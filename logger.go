@@ -1,4 +1,4 @@
-package golangtbotapi
+package yagolangtbotapi
 
 import (
 	"log"

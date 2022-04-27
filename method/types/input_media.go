@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/udev-21/golang-tbot-api/utils"
+	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
 type InputMedia interface {
