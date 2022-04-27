@@ -302,3 +302,25 @@ func (ba *BotAPI) RevokeChatInviteLink(chat *types.Chat, content *method.RevokeC
 	}
 	return &response.Link, nil
 }
+
+func (ba *BotAPI) DeleteMessage(chat *types.Chat, messageID int64) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+	res, err := ba.request("deleteMessage", map[string]interface{}{
+		"chat_id":    chatID,
+		"message_id": messageID,
+	})
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("not deleted")
+	}
+	var tres bool
+	json.Unmarshal(res.Result, &tres)
+	if !tres {
+		return newError("not deleted")
+	}
+	return nil
+}

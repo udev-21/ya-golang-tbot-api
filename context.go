@@ -79,4 +79,5 @@ type Context interface {
 	CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error)
 	EditChatInviteLink(chat *types.Chat, content *method.EditChatInviteLink) (*types.ChatInviteLink, error)
 	RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error)
+	DeleteMessage(chat *types.Chat, messageID int64) error
 }

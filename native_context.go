@@ -177,3 +177,7 @@ func (n *nativeContext) EditChatInviteLink(chat *types.Chat, content *method.Edi
 func (n *nativeContext) RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error) {
 	return n.bot.RevokeChatInviteLink(chat, content)
 }
+
+func (n *nativeContext) DeleteMessage(chat *types.Chat, messageID int64) error {
+	return n.bot.DeleteMessage(chat, messageID)
+}
