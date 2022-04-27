@@ -1,4 +1,4 @@
-module github.com/udev-21/golang-tbot-api
+module github.com/udev-21/ya-golang-tbot-api
 
 go 1.18
 

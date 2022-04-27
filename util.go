@@ -1,4 +1,4 @@
-package golangtbotapi
+package yagolangtbotapi
 
 // func (b *BotAPI) NewMessage(text string) *method.Message {
 // 	return method.NewSendMessage(text)

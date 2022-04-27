@@ -1,10 +1,10 @@
-package golangtbotapi
+package yagolangtbotapi
 
 import (
 	"time"
 
-	"github.com/udev-21/golang-tbot-api/method"
-	"github.com/udev-21/golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/method"
+	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
 type Poller interface {

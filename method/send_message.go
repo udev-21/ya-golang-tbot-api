@@ -1,10 +1,10 @@
 package method
 
 import (
-	myTypes "github.com/udev-21/golang-tbot-api/method/types"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 
-	"github.com/udev-21/golang-tbot-api/types"
-	"github.com/udev-21/golang-tbot-api/utils"
+	"github.com/udev-21/ya-golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
 func NewSendMessage(text string) *Message {
