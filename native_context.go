@@ -189,6 +189,7 @@ func (n *nativeContext) SetChatStickerSet(chat *types.Chat, stickerSetName strin
 func (n *nativeContext) DeleteChatStickerSet(chat *types.Chat) error {
 	return n.bot.DeleteChatStickerSet(chat)
 }
+
 func (n *nativeContext) GetChatMember(chat *types.Chat, userID int64) (*types.ChatMember, error) {
 	return n.bot.GetChatMember(chat, userID)
 }
