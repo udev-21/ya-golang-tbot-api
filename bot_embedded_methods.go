@@ -413,3 +413,22 @@ func (ba *BotAPI) GetChatMemberCount(chat *types.Chat) (*int64, error) {
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) GetStickerSet(name string) (*types.StickerSet, error) {
+	res, err := ba.request("getStickerSet", map[string]interface{}{
+		"name": name,
+	})
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("getStickerSet failed")
+	}
+	var tres types.StickerSet
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("getStickerSet unmarshal error: " + err.Error())
+	}
+
+	return &tres, nil
+}

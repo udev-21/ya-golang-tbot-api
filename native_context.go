@@ -196,3 +196,7 @@ func (n *nativeContext) GetChatMember(chat *types.Chat, userID int64) (*types.Ch
 func (n *nativeContext) GetChatMemberCount(chat *types.Chat) (*int64, error) {
 	return n.bot.GetChatMemberCount(chat)
 }
+
+func (n *nativeContext) GetStickerSet(name string) (*types.StickerSet, error) {
+	return n.bot.GetStickerSet(name)
+}
