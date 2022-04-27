@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
@@ -32,10 +31,8 @@ func handle(ctx yagolangtbotapi.Context) error {
 
 	edit := method.NewEditMessageText("new <b>EDITED</b> text message")
 	edit.WithParseModeHTML()
-	// convert messageId to string
-	mID := strconv.FormatInt(sendedMessage.MessageID, 10)
 
-	edit.WithMessageID(mID)
+	edit.WithMessageID(sendedMessage.MessageID)
 	ctx.Send(ctx.Chat(), edit)
 	return nil
 }

@@ -14,7 +14,7 @@ func NewEditMessageText(text string) *EditMessageText {
 
 type EditMessageText struct {
 	Text                  string                `json:"text"`
-	MessageID             string                `json:"message_id,omitempty"`
+	MessageID             int64                 `json:"message_id,omitempty"`
 	InlineMessageID       string                `json:"inline_message_id,omitempty"`
 	Entities              []types.MessageEntity `json:"entities,omitempty"`
 	DisableWebPagePreview bool                  `json:"disable_web_page_preview,omitempty"`
@@ -31,7 +31,7 @@ func (emt *EditMessageText) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(emt)
 }
 
-func (emt *EditMessageText) WithMessageID(messageID string) {
+func (emt *EditMessageText) WithMessageID(messageID int64) {
 	emt.MessageID = messageID
 }
 
