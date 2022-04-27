@@ -390,3 +390,26 @@ func (ba *BotAPI) GetChatMember(chat *types.Chat, userID int64) (*types.ChatMemb
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) GetChatMemberCount(chat *types.Chat) (*int64, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return nil, err
+	}
+	res, err := ba.request("getChatMemberCount", map[string]interface{}{
+		"chat_id": chatID,
+	})
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("getChatMemberCount failed")
+	}
+	var tres int64
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("getChatMemberCount unmarshal error: " + err.Error())
+	}
+
+	return &tres, nil
+}

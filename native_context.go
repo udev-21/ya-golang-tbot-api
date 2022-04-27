@@ -192,3 +192,7 @@ func (n *nativeContext) DeleteChatStickerSet(chat *types.Chat) error {
 func (n *nativeContext) GetChatMember(chat *types.Chat, userID int64) (*types.ChatMember, error) {
 	return n.bot.GetChatMember(chat, userID)
 }
+
+func (n *nativeContext) GetChatMemberCount(chat *types.Chat) (*int64, error) {
+	return n.bot.GetChatMemberCount(chat)
+}

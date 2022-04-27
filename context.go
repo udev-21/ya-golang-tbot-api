@@ -83,4 +83,5 @@ type Context interface {
 	SetChatStickerSet(chat *types.Chat, stickerSetName string) error
 	DeleteChatStickerSet(chat *types.Chat) error
 	GetChatMember(chat *types.Chat, userID int64) (*types.ChatMember, error)
+	GetChatMemberCount(chat *types.Chat) (*int64, error)
 }
