@@ -3,6 +3,7 @@ package golangtbotapi
 import (
 	"io"
 
+	"github.com/udev-21/golang-tbot-api/method"
 	myTypes "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/types"
 )
@@ -163,4 +164,7 @@ func (n *nativeContext) GetChatAdministrators(chat *types.Chat) (types.ChatMembe
 
 func (n *nativeContext) DeleteChatPhoto(chat *types.Chat) error {
 	return n.bot.DeleteChatPhoto(chat)
+}
+func (n *nativeContext) CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error) {
+	return n.bot.CreateChatInviteLink(chat, content)
 }

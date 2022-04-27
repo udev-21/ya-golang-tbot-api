@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 
+	"github.com/udev-21/golang-tbot-api/method"
 	"github.com/udev-21/golang-tbot-api/types"
 )
 
@@ -198,4 +199,38 @@ func (ba *BotAPI) DeleteChatPhoto(chat *types.Chat) error {
 		return newError("something went wrong")
 	}
 	return nil
+}
+
+func (ba *BotAPI) CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+	params, err := content.Params()
+	if err != nil {
+		return nil, err
+	}
+	params["chat_id"] = chatID
+	res, err := request(ba.getPath("createChatInviteLink"), params, ba.httpClient)
+	if err != nil {
+		return nil, err
+	}
+	log.Println(string(res))
+	var response struct {
+		OK   bool                 `json:"ok"`
+		Link types.ChatInviteLink `json:"result"`
+	}
+
+	err = json.Unmarshal(res, &response)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	if !response.OK {
+		writeLog(LogLevelError, ba.logger, "something went wrong")
+		return nil, newError("something went wrong")
+	}
+	return &response.Link, nil
 }

@@ -3,6 +3,7 @@ package golangtbotapi
 import (
 	"io"
 
+	"github.com/udev-21/golang-tbot-api/method"
 	myTypes "github.com/udev-21/golang-tbot-api/method/types"
 	"github.com/udev-21/golang-tbot-api/types"
 )
@@ -75,4 +76,5 @@ type Context interface {
 	GetChat(chatID string) (*types.Chat, error)
 	GetChatAdministrators(chat *types.Chat) (types.ChatMembers, error)
 	DeleteChatPhoto(chat *types.Chat) error
+	CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error)
 }
