@@ -1,4 +1,4 @@
-package golangtbotapi
+package yagolangtbotapi
 
 type HandlerFunc func(Context) error
 

@@ -1,9 +1,9 @@
 package method
 
 import (
-	myTypes "github.com/udev-21/golang-tbot-api/method/types"
-	"github.com/udev-21/golang-tbot-api/types"
-	"github.com/udev-21/golang-tbot-api/utils"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
+	"github.com/udev-21/ya-golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
 func NewSendPoll(question string, options []string) *Poll {

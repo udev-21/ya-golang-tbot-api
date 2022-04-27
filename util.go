@@ -1,9 +1,9 @@
-package golangtbotapi
+package yagolangtbotapi
 
 import (
 	"strconv"
 
-	"github.com/udev-21/golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
 func applyMiddlewares(handler HandlerFunc, middlewares ...Middleware) HandlerFunc {

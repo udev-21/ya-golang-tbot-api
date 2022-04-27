@@ -1,11 +1,11 @@
-package golangtbotapi
+package yagolangtbotapi
 
 import (
 	"io"
 
-	"github.com/udev-21/golang-tbot-api/method"
-	myTypes "github.com/udev-21/golang-tbot-api/method/types"
-	"github.com/udev-21/golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/method"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
+	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
 type nativeContext struct {

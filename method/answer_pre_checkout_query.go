@@ -1,8 +1,8 @@
 package method
 
 import (
-	"github.com/udev-21/golang-tbot-api/types"
-	"github.com/udev-21/golang-tbot-api/utils"
+	"github.com/udev-21/ya-golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
 type AnswerPreCheckoutQuery struct {
