@@ -2,7 +2,7 @@ package types
 
 type ChatMemberRestricted struct {
 	Status                string `json:"status"`
-	Sender                User   `json:"user"`
+	User                  User   `json:"user"`
 	IsMember              bool   `json:"is_member"`
 	CanChangeInfo         bool   `json:"can_change_info"`
 	CanInviteUsers        bool   `json:"can_invite_users"`

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -109,15 +110,14 @@ func (ba *BotAPI) Handle(condition Middleware, handler HandlerFunc, additionalMi
 	ba.handlers = append(ba.handlers, handler)
 }
 
-func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
-
+func request(endpoint string, params myTypes.Params, client *http.Client) ([]byte, error) {
 	p, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 	body := bytes.NewBuffer(p)
 
-	request, err := http.NewRequest(http.MethodPost, ba.getPath(endpoint), body)
+	request, err := http.NewRequest(http.MethodPost, endpoint, body)
 
 	if err != nil {
 		return nil, err
@@ -125,13 +125,29 @@ func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiRes
 
 	request.Header.Set("Content-Type", "application/json")
 
-	response, err := ba.httpClient.Do(request)
+	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
+	body, err := request(ba.getPath(endpoint), params, ba.httpClient)
+	if err != nil {
+		return nil, err
+	}
 	var res types.ApiResponse
-	json.NewDecoder(response.Body).Decode(&res)
+	err = json.Unmarshal(body, &res)
+	if err != nil {
+		return nil, err
+	}
+	res.RawJson = body
 	return &res, nil
 }
 
@@ -318,9 +334,6 @@ func (b *BotAPI) Start() {
 		b.poller.Poll(b, b.updates, stop)
 		close(stopConfirm)
 	}()
-
-	log.Println("after poller")
-	// time.Sleep(2 * time.Second)
 
 	for {
 		select {

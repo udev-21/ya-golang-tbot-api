@@ -3,7 +3,7 @@ package golangtbotapi
 import (
 	"encoding/json"
 	"io"
-	"strconv"
+	"log"
 
 	"github.com/udev-21/golang-tbot-api/types"
 )
@@ -91,17 +91,10 @@ func (ba *BotAPI) DownloadFile(file *types.File, dest io.Writer) error {
 }
 
 func (ba *BotAPI) LeaveChat(chat *types.Chat) error {
-	if chat == nil {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
 		return newError("chat is required")
-	}
-	var chatID string
-	if chat.ID == 0 {
-		if chat.Username == nil || len(*chat.Username) == 0 {
-			return newError("chat is required")
-		}
-		chatID = *chat.Username
-	} else {
-		chatID = strconv.FormatInt(chat.ID, 10)
 	}
 
 	res, err := ba.request("leaveChat", map[string]interface{}{
@@ -143,4 +136,36 @@ func (ba *BotAPI) GetChat(chatID string) (*types.Chat, error) {
 		return nil, newError(err.Error())
 	}
 	return &response, nil
+}
+
+func (ba *BotAPI) GetChatAdministrators(chat *types.Chat) (types.ChatMembers, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	res, err := request(ba.getPath("getChatAdministrators"), map[string]interface{}{
+		"chat_id": chatID,
+	}, ba.httpClient)
+
+	if err != nil {
+		return nil, err
+	}
+	log.Println(string(res))
+	var response struct {
+		types.ApiResponse
+		ChatMembers types.ChatMembers `json:"result,omitempty"`
+	}
+	err = json.Unmarshal(res, &response)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	if !response.OK {
+		writeLog(LogLevelError, ba.logger, "something went wrong")
+		return nil, newError("something went wrong")
+	}
+	return response.ChatMembers, nil
 }
