@@ -21,12 +21,9 @@ func handle(ctx yagolangtbotapi.Context) error {
 		panic("not sended")
 	}
 
-	var message struct {
-		OK      bool          `json:"bool"`
-		Message types.Message `json:"result"`
-	}
+	var sendedMessage types.Message
 
-	if json.Unmarshal(response.RawJson, &message) != nil {
+	if json.Unmarshal(response.Result, &sendedMessage) != nil {
 		panic("can't unmarsal")
 	}
 
@@ -36,7 +33,7 @@ func handle(ctx yagolangtbotapi.Context) error {
 	edit := method.NewEditMessageText("new <b>EDITED</b> text message")
 	edit.WithParseModeHTML()
 	// convert messageId to string
-	mID := strconv.FormatInt(message.Message.MessageID, 10)
+	mID := strconv.FormatInt(sendedMessage.MessageID, 10)
 
 	edit.WithMessageID(mID)
 	ctx.Send(ctx.Chat(), edit)

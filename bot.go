@@ -147,7 +147,7 @@ func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiRes
 	if err != nil {
 		return nil, err
 	}
-	res.RawJson = body
+
 	return &res, nil
 }
 
