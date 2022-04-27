@@ -346,3 +346,23 @@ func (ba *BotAPI) SetChatStickerSet(chat *types.Chat, stickerSetName string) err
 	}
 	return nil
 }
+func (ba *BotAPI) DeleteChatStickerSet(chat *types.Chat) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+	res, err := ba.request("deleteChatStickerSet", map[string]interface{}{
+		"chat_id": chatID,
+	})
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("not deleted")
+	}
+	var tres bool
+	json.Unmarshal(res.Result, &tres)
+	if !tres {
+		return newError("not deleted")
+	}
+	return nil
+}

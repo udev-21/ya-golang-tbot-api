@@ -81,4 +81,5 @@ type Context interface {
 	RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error)
 	DeleteMessage(chat *types.Chat, messageID int64) error
 	SetChatStickerSet(chat *types.Chat, stickerSetName string) error
+	DeleteChatStickerSet(chat *types.Chat) error
 }
