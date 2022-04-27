@@ -90,4 +90,5 @@ type Context interface {
 	BanChatSenderChat(chat *types.Chat, senderChatID int64) error
 	UnBanChatSenderChat(chat *types.Chat, senderChatID int64) error
 	SetChatPermissions(chat *types.Chat, permissions *types.ChatPermissions) error
+	SetMyCommands(payload *method.SetMyCommands) error
 }

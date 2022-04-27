@@ -573,3 +573,29 @@ func (ba *BotAPI) SetChatPermissions(chat *types.Chat, permissions *types.ChatPe
 
 	return nil
 }
+
+func (ba *BotAPI) SetMyCommands(payload *method.SetMyCommands) error {
+	if payload == nil {
+		return newError("payload required")
+	}
+
+	res, err := ba.Send(nil, payload)
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("SetMyCommands failed")
+	}
+
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("SetMyCommands unmarshal error: " + err.Error())
+	}
+
+	if !tres {
+		return newError("SetMyCommands failed")
+	}
+
+	return nil
+}

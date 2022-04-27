@@ -221,3 +221,7 @@ func (n *nativeContext) UnBanChatSenderChat(chat *types.Chat, senderChatID int64
 func (n *nativeContext) SetChatPermissions(chat *types.Chat, permissions *types.ChatPermissions) error {
 	return n.bot.SetChatPermissions(chat, permissions)
 }
+
+func (n *nativeContext) SetMyCommands(payload *method.SetMyCommands) error {
+	return n.bot.SetMyCommands(payload)
+}
