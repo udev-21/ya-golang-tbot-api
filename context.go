@@ -86,4 +86,5 @@ type Context interface {
 	GetChatMemberCount(chat *types.Chat) (*int64, error)
 	GetStickerSet(name string) (*types.StickerSet, error)
 	ExportChatInviteLink(chat *types.Chat) (*string, error)
+	SetChatAdministratorCustomTitle(chat *types.Chat, userID int64, title string) error
 }

@@ -1,6 +1,6 @@
 ## Examples
 
-### _Talk is cheap show me the example :)_
+### _Doc is cheap show me the example :)_
 
 ```sh
 git clone https://github.com/udev-21/ya-golang-tbot-api/ yagolangtbotapi

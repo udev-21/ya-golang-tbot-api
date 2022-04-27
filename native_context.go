@@ -205,3 +205,7 @@ func (n *nativeContext) GetStickerSet(name string) (*types.StickerSet, error) {
 func (n *nativeContext) ExportChatInviteLink(chat *types.Chat) (*string, error) {
 	return n.bot.ExportChatInviteLink(chat)
 }
+
+func (n *nativeContext) SetChatAdministratorCustomTitle(chat *types.Chat, userID int64, title string) error {
+	return n.bot.SetChatAdministratorCustomTitle(chat, userID, title)
+}

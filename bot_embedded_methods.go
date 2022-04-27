@@ -456,3 +456,32 @@ func (ba *BotAPI) ExportChatInviteLink(chat *types.Chat) (*string, error) {
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) SetChatAdministratorCustomTitle(chat *types.Chat, userID int64, title string) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+
+	res, err := ba.request("setChatAdministratorCustomTitle", map[string]interface{}{
+		"chat_id": chatID,
+		"user_id": userID,
+		"title":   title,
+	})
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("setChatAdministratorCustomTitle failed")
+	}
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("setChatAdministratorCustomTitle unmarshal error: " + err.Error())
+	}
+	if !tres {
+		return newError("setChatAdministratorCustomTitle failed")
+	}
+
+	return nil
+}
