@@ -209,3 +209,6 @@ func (n *nativeContext) ExportChatInviteLink(chat *types.Chat) (*string, error) 
 func (n *nativeContext) SetChatAdministratorCustomTitle(chat *types.Chat, userID int64, title string) error {
 	return n.bot.SetChatAdministratorCustomTitle(chat, userID, title)
 }
+func (n *nativeContext) BanChatSenderChat(chat *types.Chat, senderChatID int64) error {
+	return n.bot.BanChatSenderChat(chat, senderChatID)
+}

@@ -485,3 +485,31 @@ func (ba *BotAPI) SetChatAdministratorCustomTitle(chat *types.Chat, userID int64
 
 	return nil
 }
+
+func (ba *BotAPI) BanChatSenderChat(chat *types.Chat, senderChatID int64) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+
+	res, err := ba.request("banChatSenderChat", map[string]interface{}{
+		"chat_id":        chatID,
+		"sender_chat_id": senderChatID,
+	})
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("BanChatSenderChat failed")
+	}
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("BanChatSenderChat unmarshal error: " + err.Error())
+	}
+	if !tres {
+		return newError("BanChatSenderChat failed")
+	}
+
+	return nil
+}
