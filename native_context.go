@@ -181,3 +181,6 @@ func (n *nativeContext) RevokeChatInviteLink(chat *types.Chat, content *method.R
 func (n *nativeContext) DeleteMessage(chat *types.Chat, messageID int64) error {
 	return n.bot.DeleteMessage(chat, messageID)
 }
+func (n *nativeContext) SetChatStickerSet(chat *types.Chat, stickerSetName string) error {
+	return n.bot.SetChatStickerSet(chat, stickerSetName)
+}

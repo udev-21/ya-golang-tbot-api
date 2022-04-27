@@ -36,7 +36,7 @@ func handle(ctx yagolangtbotapi.Context) error {
 	return nil
 }
 
-const TOKEN = "1125722188:AAH1zk1xt_3JaSD2GS8EDut8waUx52YMiUY"
+const TOKEN = "BOT:TOKEN"
 
 func main() {
 	bot := yagolangtbotapi.NewBotAPI(TOKEN)
