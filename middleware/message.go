@@ -61,6 +61,15 @@ func OnlyGroup(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 	}
 }
 
+func OnlyPrivate(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
+	return func(ctx golangtbotapi.Context) error {
+		if ctx.Chat() != nil && ctx.Chat().Type == types.ChatTypePrivate {
+			next(ctx)
+		}
+		return nil
+	}
+}
+
 func OnlySupergroup(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 	return func(ctx golangtbotapi.Context) error {
 		if ctx.Chat() != nil && ctx.Chat().Type == types.ChatTypeSuperGroup {

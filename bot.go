@@ -10,7 +10,6 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"time"
 
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
@@ -288,8 +287,6 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 		} else {
 			data["chat_id"] = chat.Username
 		}
-	} else {
-		os.Exit(123)
 	}
 
 	// log.Println(data)
