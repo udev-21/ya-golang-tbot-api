@@ -346,6 +346,7 @@ func (ba *BotAPI) SetChatStickerSet(chat *types.Chat, stickerSetName string) err
 	}
 	return nil
 }
+
 func (ba *BotAPI) DeleteChatStickerSet(chat *types.Chat) error {
 	chatID, err := getChatID(chat)
 	if err != nil {
@@ -365,4 +366,27 @@ func (ba *BotAPI) DeleteChatStickerSet(chat *types.Chat) error {
 		return newError("not deleted")
 	}
 	return nil
+}
+
+func (ba *BotAPI) GetChatMember(chat *types.Chat, userID int64) (*types.ChatMember, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return nil, err
+	}
+	res, err := ba.request("getChatMember", map[string]interface{}{
+		"chat_id": chatID,
+		"user_id": userID,
+	})
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("getChatMember failed")
+	}
+	var tres types.ChatMember
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, err
+	}
+
+	return &tres, nil
 }
