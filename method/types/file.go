@@ -84,9 +84,17 @@ func (fp *FilePath) IsInputFile() {}
 // FileURL is a URL to use as a file for a request.
 type FileURL string
 
+func NewFileURL(url string) FileURL {
+	return FileURL(url)
+}
+
 func (fu FileURL) IsInputFile() {}
 
 // FileID is an ID of a file already uploaded to Telegram.
 type FileID FileURL
+
+func NewFileID(fileID string) FileID {
+	return FileID(fileID)
+}
 
 func (fi FileID) IsInputFile() {}
