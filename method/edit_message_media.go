@@ -1,7 +1,6 @@
 package method
 
 import (
-	"github.com/udev-21/ya-golang-tbot-api/method/types"
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
@@ -12,9 +11,9 @@ func NewEditMessageMedia() *EditMessageMedia {
 
 // https://core.telegram.org/bots/api#editmessagemedia
 type EditMessageMedia struct {
-	Media           types.InputMedia `json:"media"`
-	MessageID       int64            `json:"message_id,omitempty"`
-	InlineMessageID string           `json:"inline_message_id,omitempty"`
+	Media           myTypes.InputMedia `json:"media"`
+	MessageID       int64              `json:"message_id,omitempty"`
+	InlineMessageID string             `json:"inline_message_id,omitempty"`
 
 	myTypes.ReplyMarkuper
 }
