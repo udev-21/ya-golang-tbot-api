@@ -9,6 +9,7 @@ func NewCreateChatInviteLink() *CreateChatInviteLink {
 	return &CreateChatInviteLink{}
 }
 
+// https://core.telegram.org/bots/api#createchatinvitelink
 type CreateChatInviteLink struct {
 	Name               string `json:"name,omitempty"`
 	ExpireDate         *int64 `json:"expire_date,omitempty"`
