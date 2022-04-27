@@ -432,3 +432,27 @@ func (ba *BotAPI) GetStickerSet(name string) (*types.StickerSet, error) {
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) ExportChatInviteLink(chat *types.Chat) (*string, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ba.request("exportChatInviteLink", map[string]interface{}{
+		"chat_id": chatID,
+	})
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("exportChatInviteLink failed")
+	}
+	var tres string
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("exportChatInviteLink unmarshal error: " + err.Error())
+	}
+
+	return &tres, nil
+}

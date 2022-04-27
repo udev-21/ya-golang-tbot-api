@@ -201,3 +201,7 @@ func (n *nativeContext) GetChatMemberCount(chat *types.Chat) (*int64, error) {
 func (n *nativeContext) GetStickerSet(name string) (*types.StickerSet, error) {
 	return n.bot.GetStickerSet(name)
 }
+
+func (n *nativeContext) ExportChatInviteLink(chat *types.Chat) (*string, error) {
+	return n.bot.ExportChatInviteLink(chat)
+}
