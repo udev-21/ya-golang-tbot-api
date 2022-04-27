@@ -74,4 +74,5 @@ type Context interface {
 	LeaveChat(chat *types.Chat) error
 	GetChat(chatID string) (*types.Chat, error)
 	GetChatAdministrators(chat *types.Chat) (types.ChatMembers, error)
+	DeleteChatPhoto(chat *types.Chat) error
 }

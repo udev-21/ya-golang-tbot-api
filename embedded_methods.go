@@ -169,3 +169,33 @@ func (ba *BotAPI) GetChatAdministrators(chat *types.Chat) (types.ChatMembers, er
 	}
 	return response.ChatMembers, nil
 }
+
+func (ba *BotAPI) DeleteChatPhoto(chat *types.Chat) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return newError(err.Error())
+	}
+
+	res, err := request(ba.getPath("deleteChatPhoto"), map[string]interface{}{
+		"chat_id": chatID,
+	}, ba.httpClient)
+
+	if err != nil {
+		return err
+	}
+	log.Println(string(res))
+	var response types.ApiResponse
+
+	err = json.Unmarshal(res, &response)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return newError(err.Error())
+	}
+
+	if !response.OK {
+		writeLog(LogLevelError, ba.logger, "something went wrong")
+		return newError("something went wrong")
+	}
+	return nil
+}

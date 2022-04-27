@@ -160,3 +160,7 @@ func (n *nativeContext) GetChat(chatID string) (*types.Chat, error) {
 func (n *nativeContext) GetChatAdministrators(chat *types.Chat) (types.ChatMembers, error) {
 	return n.bot.GetChatAdministrators(chat)
 }
+
+func (n *nativeContext) DeleteChatPhoto(chat *types.Chat) error {
+	return n.bot.DeleteChatPhoto(chat)
+}
