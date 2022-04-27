@@ -1,7 +1,6 @@
 package method
 
 import (
-	"github.com/udev-21/ya-golang-tbot-api/method/types"
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
@@ -34,10 +33,10 @@ func (s *Sticker) Params() (myTypes.Params, error) {
 	return res, nil
 }
 
-func (s *Sticker) Files() []types.InputFile {
+func (s *Sticker) Files() []myTypes.InputFile {
 	if tmp, ok := s.Sticker.(myTypes.Uploadable); ok {
 		tmp.SetField("sticker")
-		return []types.InputFile{
+		return []myTypes.InputFile{
 			tmp,
 		}
 	}
