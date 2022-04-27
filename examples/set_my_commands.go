@@ -21,8 +21,7 @@ func main() {
 	}
 
 	payload := method.NewSetMyCommands(commands)
-	scope := types.NewBotCommandScopeAllPrivateChats()
-	payload.WithScope(scope)
+	// payload.WithScope(scope)
 
 	log.Println(bot.SetMyCommands(payload))
 }

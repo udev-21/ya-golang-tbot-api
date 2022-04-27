@@ -225,3 +225,7 @@ func (n *nativeContext) SetChatPermissions(chat *types.Chat, permissions *types.
 func (n *nativeContext) SetMyCommands(payload *method.SetMyCommands) error {
 	return n.bot.SetMyCommands(payload)
 }
+
+func (n *nativeContext) DeleteMyCommands(payload *method.DeleteMyCommands) error {
+	return n.bot.DeleteMyCommands(payload)
+}

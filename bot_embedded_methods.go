@@ -599,3 +599,29 @@ func (ba *BotAPI) SetMyCommands(payload *method.SetMyCommands) error {
 
 	return nil
 }
+
+func (ba *BotAPI) DeleteMyCommands(payload *method.DeleteMyCommands) error {
+	if payload == nil {
+		return newError("payload required")
+	}
+
+	res, err := ba.Send(nil, payload)
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("DeleteMyCommands failed")
+	}
+
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("DeleteMyCommands unmarshal error: " + err.Error())
+	}
+
+	if !tres {
+		return newError("DeleteMyCommands failed")
+	}
+
+	return nil
+}
