@@ -513,3 +513,31 @@ func (ba *BotAPI) BanChatSenderChat(chat *types.Chat, senderChatID int64) error 
 
 	return nil
 }
+
+func (ba *BotAPI) UnBanChatSenderChat(chat *types.Chat, senderChatID int64) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+
+	res, err := ba.request("unbanChatSenderChat", map[string]interface{}{
+		"chat_id":        chatID,
+		"sender_chat_id": senderChatID,
+	})
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("unbanChatSenderChat failed")
+	}
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("unbanChatSenderChat unmarshal error: " + err.Error())
+	}
+	if !tres {
+		return newError("unbanChatSenderChat failed")
+	}
+
+	return nil
+}

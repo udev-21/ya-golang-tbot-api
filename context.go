@@ -88,4 +88,5 @@ type Context interface {
 	ExportChatInviteLink(chat *types.Chat) (*string, error)
 	SetChatAdministratorCustomTitle(chat *types.Chat, userID int64, title string) error
 	BanChatSenderChat(chat *types.Chat, senderChatID int64) error
+	UnBanChatSenderChat(chat *types.Chat, senderChatID int64) error
 }
