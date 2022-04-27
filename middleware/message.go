@@ -41,3 +41,12 @@ func InlineQuery(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 		return nil
 	}
 }
+
+func CallbackQuery(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
+	return func(ctx golangtbotapi.Context) error {
+		if ctx.CallbackQuery() != nil {
+			next(ctx)
+		}
+		return nil
+	}
+}
