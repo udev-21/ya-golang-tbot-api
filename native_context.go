@@ -217,3 +217,7 @@ func (n *nativeContext) BanChatSenderChat(chat *types.Chat, senderChatID int64) 
 func (n *nativeContext) UnBanChatSenderChat(chat *types.Chat, senderChatID int64) error {
 	return n.bot.UnBanChatSenderChat(chat, senderChatID)
 }
+
+func (n *nativeContext) SetChatPermissions(chat *types.Chat, permissions *types.ChatPermissions) error {
+	return n.bot.SetChatPermissions(chat, permissions)
+}

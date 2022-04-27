@@ -541,3 +541,35 @@ func (ba *BotAPI) UnBanChatSenderChat(chat *types.Chat, senderChatID int64) erro
 
 	return nil
 }
+
+func (ba *BotAPI) SetChatPermissions(chat *types.Chat, permissions *types.ChatPermissions) error {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		return err
+	}
+
+	if permissions == nil {
+		return newError("permissions required")
+	}
+
+	res, err := ba.request("setChatPermissions", map[string]interface{}{
+		"chat_id":     chatID,
+		"permissions": permissions,
+	})
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("setChatPermissions failed")
+	}
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("setChatPermissions unmarshal error: " + err.Error())
+	}
+	if !tres {
+		return newError("setChatPermissions failed")
+	}
+
+	return nil
+}
