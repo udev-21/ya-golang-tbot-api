@@ -165,6 +165,15 @@ func (n *nativeContext) GetChatAdministrators(chat *types.Chat) (types.ChatMembe
 func (n *nativeContext) DeleteChatPhoto(chat *types.Chat) error {
 	return n.bot.DeleteChatPhoto(chat)
 }
+
 func (n *nativeContext) CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error) {
 	return n.bot.CreateChatInviteLink(chat, content)
+}
+
+func (n *nativeContext) EditChatInviteLink(chat *types.Chat, content *method.EditChatInviteLink) (*types.ChatInviteLink, error) {
+	return n.bot.EditChatInviteLink(chat, content)
+}
+
+func (n *nativeContext) RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error) {
+	return n.bot.RevokeChatInviteLink(chat, content)
 }

@@ -234,3 +234,71 @@ func (ba *BotAPI) CreateChatInviteLink(chat *types.Chat, content *method.CreateC
 	}
 	return &response.Link, nil
 }
+
+func (ba *BotAPI) EditChatInviteLink(chat *types.Chat, content *method.EditChatInviteLink) (*types.ChatInviteLink, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+	params, err := content.Params()
+	if err != nil {
+		return nil, err
+	}
+	params["chat_id"] = chatID
+	res, err := request(ba.getPath("editChatInviteLink"), params, ba.httpClient)
+	if err != nil {
+		return nil, err
+	}
+	log.Println(string(res))
+	var response struct {
+		OK   bool                 `json:"ok"`
+		Link types.ChatInviteLink `json:"result"`
+	}
+
+	err = json.Unmarshal(res, &response)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	if !response.OK {
+		writeLog(LogLevelError, ba.logger, "something went wrong")
+		return nil, newError("something went wrong")
+	}
+	return &response.Link, nil
+}
+
+func (ba *BotAPI) RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error) {
+	chatID, err := getChatID(chat)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+	params, err := content.Params()
+	if err != nil {
+		return nil, err
+	}
+	params["chat_id"] = chatID
+	res, err := request(ba.getPath("editChatInviteLink"), params, ba.httpClient)
+	if err != nil {
+		return nil, err
+	}
+	log.Println(string(res))
+	var response struct {
+		OK   bool                 `json:"ok"`
+		Link types.ChatInviteLink `json:"result"`
+	}
+
+	err = json.Unmarshal(res, &response)
+	if err != nil {
+		writeLog(LogLevelError, ba.logger, err.Error())
+		return nil, newError(err.Error())
+	}
+
+	if !response.OK {
+		writeLog(LogLevelError, ba.logger, "something went wrong")
+		return nil, newError("something went wrong")
+	}
+	return &response.Link, nil
+}

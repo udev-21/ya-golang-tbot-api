@@ -77,4 +77,6 @@ type Context interface {
 	GetChatAdministrators(chat *types.Chat) (types.ChatMembers, error)
 	DeleteChatPhoto(chat *types.Chat) error
 	CreateChatInviteLink(chat *types.Chat, content *method.CreateChatInviteLink) (*types.ChatInviteLink, error)
+	EditChatInviteLink(chat *types.Chat, content *method.EditChatInviteLink) (*types.ChatInviteLink, error)
+	RevokeChatInviteLink(chat *types.Chat, content *method.RevokeChatInviteLink) (*types.ChatInviteLink, error)
 }
