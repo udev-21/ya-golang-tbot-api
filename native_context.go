@@ -257,3 +257,7 @@ func (n *nativeContext) UploadStickerFile(file *method.UploadStickerFile) (*type
 func (n *nativeContext) SetStickerPositionInSet(stickerFileID string, position int64) error {
 	return n.bot.SetStickerPositionInSet(stickerFileID, position)
 }
+
+func (n *nativeContext) DeleteStickerFromSet(stickerFileID string) error {
+	return n.bot.DeleteStickerFromSet(stickerFileID)
+}

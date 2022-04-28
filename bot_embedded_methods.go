@@ -779,3 +779,24 @@ func (ba *BotAPI) SetStickerPositionInSet(stickerFileID string, position int64) 
 	}
 	return nil
 }
+
+func (ba *BotAPI) DeleteStickerFromSet(stickerFileID string) error {
+	res, err := ba.request("deleteStickerFromSet", map[string]interface{}{
+		"sticker": stickerFileID,
+	})
+
+	if err != nil {
+		return newError(err.Error())
+	} else if !res.OK {
+		return newError("deleteStickerFromSet failed")
+	}
+
+	var tres bool
+
+	json.Unmarshal(res.Result, &res)
+	if !tres {
+		return newError("deleteStickerFromSet failed")
+	}
+
+	return nil
+}
