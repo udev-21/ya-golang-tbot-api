@@ -19,7 +19,7 @@ Of course PR's and Forks are welcome :)
 
 ## Features
 Here is some features list that I think **simple**  and **useful**:
-- [Filters](https://github.com/udev-21/ya-golang-tbop-api#filters)
+- [Filters](https://github.com/udev-21/ya-golang-tbot-api#filters)
 - 
 
 
