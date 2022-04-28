@@ -249,6 +249,11 @@ func (n *nativeContext) SetMyDefaultAdministratorRights(smdar *method.SetMyDefau
 func (n *nativeContext) GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdministratorRights) (*types.ChatAdministratorRights, error) {
 	return n.bot.GetMyDefaultAdministratorRights(gmdar)
 }
+
 func (n *nativeContext) UploadStickerFile(file *method.UploadStickerFile) (*types.File, error) {
 	return n.bot.UploadStickerFile(file)
+}
+
+func (n *nativeContext) SetStickerPositionInSet(stickerFileID string, position int64) error {
+	return n.bot.SetStickerPositionInSet(stickerFileID, position)
 }

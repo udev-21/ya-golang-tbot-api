@@ -758,3 +758,24 @@ func (ba *BotAPI) UploadStickerFile(file *method.UploadStickerFile) (*types.File
 	}
 	return &tres, nil
 }
+
+func (ba *BotAPI) SetStickerPositionInSet(stickerFileID string, position int64) error {
+	res, err := ba.request("setStickerPositionInSet", map[string]interface{}{
+		"sticker":  stickerFileID,
+		"position": position,
+	})
+
+	if err != nil {
+		return newError(err.Error())
+	} else if !res.OK {
+		return newError("setStickerPositionInSet failed")
+	}
+
+	var tres bool
+
+	json.Unmarshal(res.Result, &res)
+	if !tres {
+		return newError("setStickerPositionInSet failed")
+	}
+	return nil
+}

@@ -99,4 +99,5 @@ type Context interface {
 	SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdministratorRights) error
 	GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdministratorRights) (*types.ChatAdministratorRights, error)
 	UploadStickerFile(file *method.UploadStickerFile) (*types.File, error)
+	SetStickerPositionInSet(stickerFileID string, position int64) error
 }
