@@ -1,7 +1,6 @@
 # Telegram bot api client for golang
 yet another Golang framework for Telegram Bot API client ([Telegram Passport](https://core.telegram.org/passport) included)
-> I've seen, there's a lot good frameworks for this stuff, but without passport
-> so that was my motivate ;)
+> I've seen, there's a lot good frameworks for this stuff, but unfortunately without passport :(
 
 ```bash
 go get -u github.com/udev-21/ya-golang-tbot-api
