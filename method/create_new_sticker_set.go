@@ -41,7 +41,7 @@ func (cnss *StickerSetBase) Files() []myTypes.InputFile {
 
 	if cnss.TgSticker != nil {
 		cnss.TgSticker.SetField("tg_sticker")
-		files = append(files, cnss.PngSticker)
+		files = append(files, cnss.TgSticker)
 	}
 	if cnss.WebmSticker != nil {
 		cnss.WebmSticker.SetField("webm_sticker")

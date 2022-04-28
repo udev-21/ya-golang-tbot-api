@@ -139,11 +139,18 @@ func request(endpoint string, params myTypes.Params, client *http.Client) ([]byt
 func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
 	body, err := request(ba.getPath(endpoint), params, ba.httpClient)
 	if err != nil {
+		writeLog(LogLevelError, ba.logger, "error while sending request: %v", err)
 		return nil, err
 	}
+	if ba.debug {
+		writeLog(LogLevelInfo, ba.logger, "recieved response from api: %q", string(body))
+	}
+
 	var res types.ApiResponse
 	err = json.Unmarshal(body, &res)
+
 	if err != nil {
+		writeLog(LogLevelError, ba.logger, "error while unmarshal response: %v", err)
 		return nil, err
 	}
 
@@ -188,25 +195,32 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 	r, w := io.Pipe()
 	m := multipart.NewWriter(w)
 
-	// json.NewEncoder(os.Stdout).Encode(sendable)
+	if ba.debug {
+		writeLog(LogLevelInfo, ba.logger, "uploading with files")
+	}
 
 	params, err := sendable.Params()
 	if err != nil {
 		return nil, err
 	}
 
+	var chatID interface{}
+
 	if chat, ok := reciever.(types.Chat); ok {
 		if chat.ID != 0 {
-			params["chat_id"] = chat.ID
+			chatID = chat.ID
 		} else {
-			params["chat_id"] = chat.Username
+			chatID = chat.Username
 		}
 	} else if chat, ok := reciever.(*types.Chat); ok {
 		if chat.ID != 0 {
-			params["chat_id"] = chat.ID
+			chatID = chat.ID
 		} else {
-			params["chat_id"] = chat.Username
+			chatID = chat.Username
 		}
+	}
+	if chatID != nil {
+		params["chat_id"] = chatID
 	}
 
 	files := sendable.Files()
@@ -271,31 +285,43 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 
 func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.ApiResponse, error) {
 	data, err := payload.Params()
+
 	if err != nil {
 		return nil, err
 	}
 
+	if ba.debug {
+		writeLog(LogLevelInfo, ba.logger, "new request to api with endpoint: %q", payload.Endpoint())
+	}
+
+	var chatID interface{}
+
 	if chat, ok := reciever.(types.Chat); ok {
 		if chat.ID != 0 {
-			data["chat_id"] = chat.ID
+			chatID = chat.ID
 		} else {
-			data["chat_id"] = chat.Username
+			chatID = chat.Username
 		}
 	} else if chat, ok := reciever.(*types.Chat); ok {
 		if chat.ID != 0 {
-			data["chat_id"] = chat.ID
+			chatID = chat.ID
 		} else {
-			data["chat_id"] = chat.Username
+			chatID = chat.Username
 		}
 	}
-
-	// log.Println(data)
+	if chatID != nil {
+		if ba.debug {
+			writeLog(LogLevelInfo, ba.logger, "chat_id set: %v", chatID)
+		}
+		data["chat_id"] = chatID
+	}
 
 	if payloadWithFiles, ok := payload.(myTypes.UploadWithFiles); ok {
 		if hasFilesNeedingUpload(payloadWithFiles.Files()) {
 			return ba.requestWithFiles(reciever, payload.Endpoint(), payloadWithFiles)
 		}
 	}
+
 	return ba.request(payload.Endpoint(), data)
 
 }
