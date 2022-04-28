@@ -498,28 +498,50 @@ type InlineQueryResultDocument struct {
 	ThumbWidther
 }
 
+type InlineQueryResultLocationBase struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+
+	HorizontalAccuracy   float64 `json:"horizontal_accuracy,omitempty"`
+	LivePeriod           int64   `json:"live_period,omitempty"`
+	Heading              int64   `json:"heading,omitempty"`
+	ProximityAlertRadius int64   `json:"proximity_alert_radius,omitempty"`
+}
+
+func (iqrl *InlineQueryResultLocationBase) WithHorizontalAccuracy(ha float64) {
+	iqrl.HorizontalAccuracy = ha
+}
+
+func (iqrl *InlineQueryResultLocationBase) WithLivePeriod(lp int64) {
+	iqrl.LivePeriod = lp
+}
+
+func (iqrl *InlineQueryResultLocationBase) WithHeading(h int64) {
+	iqrl.Heading = h
+}
+
+func (iqrl *InlineQueryResultLocationBase) WithProximityAlertRadius(r int64) {
+	iqrl.ProximityAlertRadius = r
+}
+
 func NewInlineQueryResultLocation(ID, title string, latitude, longitude float64) *InlineQueryResultLocation {
 	return &InlineQueryResultLocation{
 		BaseInlineQueryResult: BaseInlineQueryResult{
 			Type: InlineQueryResultLocationType,
 			ID:   ID,
 		},
-		Latitude:  latitude,
-		Longitude: longitude,
-		Title:     title,
+		InlineQueryResultLocationBase: InlineQueryResultLocationBase{
+			Latitude:  latitude,
+			Longitude: longitude,
+		},
+		Title: title,
 	}
 }
 
 type InlineQueryResultLocation struct {
 	BaseInlineQueryResult
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
-	Title     string  `json:"title"`
-
-	HorizontalAccuracy   float64 `json:"horizontal_accuracy,omitempty"`
-	LivePeriod           int64   `json:"live_period,omitempty"`
-	Heading              int64   `json:"heading,omitempty"`
-	ProximityAlertRadius int64   `json:"proximity_alert_radius,omitempty"`
+	InlineQueryResultLocationBase
+	Title string `json:"title"`
 
 	myTypes.ReplyMarkuper
 	InputMessageContenter
@@ -529,37 +551,7 @@ type InlineQueryResultLocation struct {
 	ThumbWidther
 }
 
-func (iqrl *InlineQueryResultLocation) WithHorizontalAccuracy(ha float64) {
-	iqrl.HorizontalAccuracy = ha
-}
-
-func (iqrl *InlineQueryResultLocation) WithLivePeriod(lp int64) {
-	iqrl.LivePeriod = lp
-}
-
-func (iqrl *InlineQueryResultLocation) WithHeading(h int64) {
-	iqrl.Heading = h
-}
-
-func (iqrl *InlineQueryResultLocation) WithProximityAlertRadius(r int64) {
-	iqrl.ProximityAlertRadius = r
-}
-
-func NewInlineQueryResultVenue(ID, title, address string, latitude, longitude float64) *InlineQueryResultVenue {
-	return &InlineQueryResultVenue{
-		BaseInlineQueryResult: BaseInlineQueryResult{
-			Type: InlineQueryResultVenueType,
-			ID:   ID,
-		},
-		Latitude:  latitude,
-		Longitude: longitude,
-		Title:     title,
-		Address:   address,
-	}
-}
-
-type InlineQueryResultVenue struct {
-	BaseInlineQueryResult
+type InlineQueryResultVenueBase struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
 	Title     string  `json:"title"`
@@ -569,6 +561,42 @@ type InlineQueryResultVenue struct {
 	FoursquareType  string `json:"foursquare_type,omitempty"`
 	GooglePlaceID   string `json:"google_place_id,omitempty"`
 	GooglePlaceType string `json:"google_place_type,omitempty"`
+}
+
+func (v *InlineQueryResultVenueBase) WithFoursquareID(foursquareID string) {
+	v.FoursquareID = foursquareID
+}
+
+func (v *InlineQueryResultVenueBase) WithFoursquareType(foursquareType string) {
+	v.FoursquareType = foursquareType
+}
+
+func (v *InlineQueryResultVenueBase) WithGooglePlaceID(googlePlaceID string) {
+	v.GooglePlaceID = googlePlaceID
+}
+
+func (v *InlineQueryResultVenueBase) WithGooglePlaceType(googlePlaceType string) {
+	v.GooglePlaceType = googlePlaceType
+}
+
+func NewInlineQueryResultVenue(ID, title, address string, latitude, longitude float64) *InlineQueryResultVenue {
+	return &InlineQueryResultVenue{
+		BaseInlineQueryResult: BaseInlineQueryResult{
+			Type: InlineQueryResultVenueType,
+			ID:   ID,
+		},
+		InlineQueryResultVenueBase: InlineQueryResultVenueBase{
+			Latitude:  latitude,
+			Longitude: longitude,
+			Title:     title,
+			Address:   address,
+		},
+	}
+}
+
+type InlineQueryResultVenue struct {
+	BaseInlineQueryResult
+	InlineQueryResultVenueBase
 
 	myTypes.ReplyMarkuper
 	InputMessageContenter
@@ -577,20 +605,20 @@ type InlineQueryResultVenue struct {
 	ThumbWidther
 }
 
-func (v *InlineQueryResultVenue) WithFoursquareID(foursquareID string) {
-	v.FoursquareID = foursquareID
+type InlineQueryResultContactBase struct {
+	PhoneNumber string `json:"phone_number"`
+	FirstName   string `json:"first_name"`
+
+	LastName string `json:"last_name,omitempty"`
+	Vcard    string `json:"vcard,omitempty"`
 }
 
-func (v *InlineQueryResultVenue) WithFoursquareType(foursquareType string) {
-	v.FoursquareType = foursquareType
+func (iqrc *InlineQueryResultContactBase) WithLastName(ln string) {
+	iqrc.LastName = ln
 }
 
-func (v *InlineQueryResultVenue) WithGooglePlaceID(googlePlaceID string) {
-	v.GooglePlaceID = googlePlaceID
-}
-
-func (v *InlineQueryResultVenue) WithGooglePlaceType(googlePlaceType string) {
-	v.GooglePlaceType = googlePlaceType
+func (iqrc *InlineQueryResultContactBase) WithVcard(vcard string) {
+	iqrc.Vcard = vcard
 }
 
 func NewInlineQueryResultContact(ID, phoneNumber, firstName string) *InlineQueryResultContact {
@@ -599,32 +627,21 @@ func NewInlineQueryResultContact(ID, phoneNumber, firstName string) *InlineQuery
 			Type: InlineQueryResultContactType,
 			ID:   ID,
 		},
-		PhoneNumber: phoneNumber,
-		FirstName:   firstName,
+		InlineQueryResultContactBase: InlineQueryResultContactBase{
+			PhoneNumber: phoneNumber,
+			FirstName:   firstName,
+		},
 	}
 }
 
 type InlineQueryResultContact struct {
 	BaseInlineQueryResult
-	PhoneNumber string `json:"phone_number"`
-	FirstName   string `json:"first_name"`
-
-	LastName string `json:"last_name,omitempty"`
-	Vcard    string `json:"vcard,omitempty"`
-
+	InlineQueryResultContactBase
 	myTypes.ReplyMarkuper
 	InputMessageContenter
 	ThumbUrler
 	ThumbHeighter
 	ThumbWidther
-}
-
-func (iqrc *InlineQueryResultContact) WithLastName(ln string) {
-	iqrc.LastName = ln
-}
-
-func (iqrc *InlineQueryResultContact) WithVcard(vcard string) {
-	iqrc.Vcard = vcard
 }
 
 func NewInlineQueryResultGame(ID, gameShortName string) *InlineQueryResultGame {
