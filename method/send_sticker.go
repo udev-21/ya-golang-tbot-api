@@ -33,12 +33,10 @@ func (s *Sticker) Params() (myTypes.Params, error) {
 	return res, nil
 }
 
-func (s *Sticker) Files() []myTypes.InputFile {
+func (s *Sticker) Files() []myTypes.Uploadable {
 	if tmp, ok := s.Sticker.(myTypes.Uploadable); ok {
 		tmp.SetField("sticker")
-		return []myTypes.InputFile{
-			tmp,
-		}
+		return []myTypes.Uploadable{tmp}
 	}
 	return nil
 }

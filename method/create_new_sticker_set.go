@@ -32,8 +32,8 @@ func (c *StickerSetBase) WithMaskPosition(mp types.MaskPosition) {
 	c.MaskPosition = &mp
 }
 
-func (cnss *StickerSetBase) Files() []myTypes.InputFile {
-	var files []myTypes.InputFile
+func (cnss *StickerSetBase) Files() []myTypes.Uploadable {
+	var files []myTypes.Uploadable
 	if tmp, ok := cnss.PngSticker.(myTypes.Uploadable); ok {
 		tmp.SetField("png_sticker")
 		files = append(files, tmp)
@@ -43,6 +43,7 @@ func (cnss *StickerSetBase) Files() []myTypes.InputFile {
 		cnss.TgSticker.SetField("tg_sticker")
 		files = append(files, cnss.TgSticker)
 	}
+
 	if cnss.WebmSticker != nil {
 		cnss.WebmSticker.SetField("webm_sticker")
 		files = append(files, cnss.WebmSticker)
@@ -82,7 +83,7 @@ func (cnss *CreateNewStickerSet) Params() (myTypes.Params, error) {
 	return tmp, nil
 }
 
-func (cnss *CreateNewStickerSet) Files() []myTypes.InputFile {
+func (cnss *CreateNewStickerSet) Files() []myTypes.Uploadable {
 	return cnss.StickerSetBase.Files()
 }
 

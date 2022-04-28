@@ -30,7 +30,7 @@ func (usf *UploadStickerFile) Params() (myTypes.Params, error) {
 	return tmp, nil
 }
 
-func (usf *UploadStickerFile) Files() []myTypes.InputFile {
+func (usf *UploadStickerFile) Files() []myTypes.Uploadable {
 	usf.PngSticker.SetField("png_sticker")
-	return []myTypes.InputFile{&usf.PngSticker}
+	return []myTypes.Uploadable{&usf.PngSticker}
 }

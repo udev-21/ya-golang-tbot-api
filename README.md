@@ -20,7 +20,8 @@ Of course PR's and Forks are welcome :)
 ## Features
 Here is some features list that I think **simple**  and **useful**:
 - [Filters](https://github.com/udev-21/ya-golang-tbot-api#filters)
-- 
+- [Logging](https://github.com/udev-21/ya-golang-tbot-api#logging)
+- []
 
 
 ## Simple Echo Bot
@@ -76,3 +77,6 @@ bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroupOrGroup) // fi
 
 bot.Handle(filter.AnyText, yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and any text 
 ```
+
+
+## Logging

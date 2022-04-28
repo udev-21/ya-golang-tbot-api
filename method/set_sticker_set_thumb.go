@@ -34,10 +34,10 @@ func (ssst *SetStickerSetThumb) Params() (myTypes.Params, error) {
 	return old, nil
 }
 
-func (ssst *SetStickerSetThumb) Files() []myTypes.InputFile {
+func (ssst *SetStickerSetThumb) Files() []myTypes.Uploadable {
 	if tmp, ok := ssst.Thumb.(myTypes.Uploadable); ok {
 		tmp.SetField("thumb")
-		return []myTypes.InputFile{tmp}
+		return []myTypes.Uploadable{tmp}
 	}
 	return nil
 }

@@ -42,7 +42,7 @@ func (fp FilePath) MarshalJSON() ([]byte, error) {
 	if fp.customFileName != "" {
 		return json.Marshal("attach://" + fp.customFileName)
 	} else {
-		return json.Marshal(filepath.Base(fp.Path))
+		return json.Marshal("attach://" + filepath.Base(fp.Path))
 	}
 }
 

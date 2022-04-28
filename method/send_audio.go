@@ -42,8 +42,8 @@ func (a *Audio) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (a *Audio) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (a *Audio) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := a.Audio.(myTypes.Uploadable); ok {
 		tmp.SetField("audio")
 		res = append(res, tmp)

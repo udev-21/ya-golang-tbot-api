@@ -42,8 +42,8 @@ func (a *Animation) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (a *Animation) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (a *Animation) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := a.Animation.(myTypes.Uploadable); ok {
 		tmp.SetField("animation")
 		res = append(res, tmp)

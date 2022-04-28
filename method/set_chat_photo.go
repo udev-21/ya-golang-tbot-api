@@ -25,8 +25,8 @@ func (scp *SetChatPhoto) Params() (myTypes.Params, error) {
 	return params, err
 }
 
-func (scp *SetChatPhoto) Files() []myTypes.InputFile {
-	var files []myTypes.InputFile
+func (scp *SetChatPhoto) Files() []myTypes.Uploadable {
+	var files []myTypes.Uploadable
 	if tmp, ok := scp.Photo.(myTypes.Uploadable); ok {
 		tmp.SetField("photo")
 		files = append(files, tmp)

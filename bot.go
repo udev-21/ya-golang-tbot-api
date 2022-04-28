@@ -36,7 +36,7 @@ type BotAPI struct {
 func NewBotAPI(token string) *BotAPI {
 
 	res := BotAPI{
-		httpClient: &http.Client{Timeout: 10 * time.Second},
+		httpClient: &http.Client{Timeout: 30 * time.Second},
 		token:      token,
 		poller:     NewLongPoller(),
 		updates:    make(chan types.Update, 200),
@@ -172,6 +172,9 @@ func uploadFile(r *io.PipeReader, w *io.PipeWriter, uploadable myTypes.Uploadabl
 		w.CloseWithError(err)
 		return
 	}
+	log.Println("\nsetting file: ")
+	log.Println(uploadable.Field(), uploadable.FileName())
+	log.Println()
 	part, err := m.CreateFormFile(uploadable.Field(), uploadable.FileName())
 	if err != nil {
 		w.CloseWithError(err)
@@ -260,9 +263,7 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 		}
 
 		for _, file := range files {
-			if f, ok := file.(myTypes.Uploadable); ok {
-				uploadFile(r, w, f, m)
-			}
+			uploadFile(r, w, file, m)
 		}
 	}()
 
@@ -317,7 +318,7 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 	}
 
 	if payloadWithFiles, ok := payload.(myTypes.UploadWithFiles); ok {
-		if hasFilesNeedingUpload(payloadWithFiles.Files()) {
+		if len(payloadWithFiles.Files()) > 0 {
 			return ba.requestWithFiles(reciever, payload.Endpoint(), payloadWithFiles)
 		}
 	}

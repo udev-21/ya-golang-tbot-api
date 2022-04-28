@@ -31,5 +31,5 @@ type UploadWithFiles interface {
 }
 
 type Filer interface {
-	Files() []InputFile
+	Files() []Uploadable
 }

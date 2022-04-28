@@ -34,6 +34,6 @@ func (cnss *AddStickerToSet) Params() (myTypes.Params, error) {
 	return tmp, nil
 }
 
-func (cnss *AddStickerToSet) Files() []myTypes.InputFile {
+func (cnss *AddStickerToSet) Files() []myTypes.Uploadable {
 	return cnss.StickerSetBase.Files()
 }

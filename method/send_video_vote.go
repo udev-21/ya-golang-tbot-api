@@ -38,8 +38,8 @@ func (v *VideoNote) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (v *VideoNote) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (v *VideoNote) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := v.VideoNote.(myTypes.Uploadable); ok {
 		tmp.SetField("video_note")
 		res = append(res, tmp)

@@ -39,8 +39,8 @@ func (v *Voice) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (v *Voice) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (v *Voice) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := v.Voice.(myTypes.Uploadable); ok {
 		tmp.SetField("voice")
 		res = append(res, tmp)

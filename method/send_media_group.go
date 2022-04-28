@@ -1,13 +1,15 @@
 package method
 
 import (
+	"encoding/json"
+	"os"
 	"strconv"
 
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
-func NewSendMediaGroup(media []myTypes.InputMedia) *MediaGroup {
+func NewSendMediaGroup(media []myTypes.SendMediaGroupable) *MediaGroup {
 	return &MediaGroup{
 		Media: media,
 	}
@@ -15,7 +17,7 @@ func NewSendMediaGroup(media []myTypes.InputMedia) *MediaGroup {
 
 // https://core.telegram.org/bots/api#sendmediagroup
 type MediaGroup struct {
-	Media []myTypes.InputMedia `json:"media"`
+	Media []myTypes.SendMediaGroupable `json:"media"`
 
 	myTypes.DisableNotificationer
 	myTypes.ProtectContenter
@@ -26,7 +28,7 @@ func (mg *MediaGroup) Endpoint() string {
 	return "sendMediaGroup"
 }
 
-func (mg *MediaGroup) Files() []myTypes.InputFile {
+func (mg *MediaGroup) Files() []myTypes.Uploadable {
 	return prepareInputMediaFiles(mg.Media)
 }
 
@@ -37,46 +39,41 @@ func (mg *MediaGroup) Params() (myTypes.Params, error) {
 	}
 	tmp := prepareInputMediaForParams(mg.Media)
 	params["media"] = tmp
+	json.NewEncoder(os.Stdout).Encode(params)
+	// os.Exit(1)
 	return params, nil
 }
 
-func prepareInputMediaFiles(inputMedias []myTypes.InputMedia) []myTypes.InputFile {
-	var newFiles []myTypes.InputFile
+func prepareInputMediaFiles(inputMedias []myTypes.SendMediaGroupable) []myTypes.Uploadable {
+	var newFiles []myTypes.Uploadable
 
 	for idx, media := range inputMedias {
 		if files := prepareInputMediaFile(media, idx); len(files) > 0 {
 			newFiles = append(newFiles, files...)
 		}
 	}
-
 	return newFiles
 }
-func prepareInputMediaFile(inputMedia myTypes.InputMedia, idx int) []myTypes.InputFile {
-	var files []myTypes.InputFile
+
+func prepareInputMediaFile(inputMedia myTypes.SendMediaGroupable, idx int) []myTypes.Uploadable {
+	var files []myTypes.Uploadable
 
 	switch m := inputMedia.(type) {
 	case *myTypes.InputMediaPhoto:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
 			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
-		} else {
-			files = append(files, m.Media)
 		}
 	case *myTypes.InputMediaVideo:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
 			tmp.SetField(tmp.CustomFileName())
-
 			files = append(files, tmp)
-		} else {
-			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
 			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
 				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
-			} else {
-				files = append(files, m.Thumb)
 			}
 		}
 	case *myTypes.InputMediaDocument:
@@ -84,41 +81,33 @@ func prepareInputMediaFile(inputMedia myTypes.InputMedia, idx int) []myTypes.Inp
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
 			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
-		} else {
-			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
 			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
 				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
-			} else {
-				files = append(files, m.Thumb)
 			}
 		}
+
 	case *myTypes.InputMediaAudio:
 
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {
 			tmp.SetField(tmp.CustomFileName())
 			files = append(files, tmp)
-		} else {
-			files = append(files, m.Media)
 		}
 
 		if m.Thumb != nil {
 			if tmp, ok := (m.Thumb).(myTypes.Uploadable); ok {
 				tmp.SetField("file_" + strconv.FormatInt(int64(idx), 10) + "_thumb")
 				files = append(files, tmp)
-			} else {
-				files = append(files, m.Thumb)
 			}
 		}
-
 	}
 	return files
 }
-func prepareInputMediaForParams(inputMedia []myTypes.InputMedia) []myTypes.InputMedia {
-	newMedia := make([]myTypes.InputMedia, len(inputMedia))
+func prepareInputMediaForParams(inputMedia []myTypes.SendMediaGroupable) []myTypes.SendMediaGroupable {
+	newMedia := make([]myTypes.SendMediaGroupable, len(inputMedia))
 	copy(newMedia, inputMedia)
 
 	for idx, media := range inputMedia {
@@ -130,7 +119,7 @@ func prepareInputMediaForParams(inputMedia []myTypes.InputMedia) []myTypes.Input
 	return newMedia
 }
 
-func prepareInputMediaParam(inputMedia myTypes.InputMedia, idx int) myTypes.InputMedia {
+func prepareInputMediaParam(inputMedia myTypes.SendMediaGroupable, idx int) myTypes.SendMediaGroupable {
 	switch m := inputMedia.(type) {
 	case *myTypes.InputMediaPhoto:
 		if tmp, ok := m.Media.(myTypes.Uploadable); ok {

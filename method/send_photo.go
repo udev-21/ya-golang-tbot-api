@@ -38,8 +38,8 @@ func (p *Photo) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (p *Photo) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (p *Photo) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := p.Photo.(myTypes.Uploadable); ok {
 		tmp.SetField("photo")
 		res = append(res, tmp)

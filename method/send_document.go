@@ -44,8 +44,8 @@ func (d *Document) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (d *Document) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (d *Document) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := d.Document.(myTypes.Uploadable); ok {
 		tmp.SetField("document")
 		res = append(res, tmp)

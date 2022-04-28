@@ -43,8 +43,8 @@ func (v *Video) Params() (myTypes.Params, error) {
 	return params, nil
 }
 
-func (v *Video) Files() []myTypes.InputFile {
-	var res []myTypes.InputFile
+func (v *Video) Files() []myTypes.Uploadable {
+	var res []myTypes.Uploadable
 	if tmp, ok := v.Video.(myTypes.Uploadable); ok {
 		tmp.SetField("video")
 		res = append(res, tmp)

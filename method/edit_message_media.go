@@ -26,6 +26,10 @@ func (emc *EditMessageMedia) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(emc)
 }
 
+func (emc *EditMessageMedia) Files() []myTypes.Uploadable {
+	return emc.Media.Files()
+}
+
 func (emc *EditMessageMedia) WithMessageID(messageID int64) {
 	emc.MessageID = messageID
 }

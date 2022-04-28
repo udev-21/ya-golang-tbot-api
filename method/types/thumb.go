@@ -1,7 +1,7 @@
 package types
 
 type Thumber struct {
-	Thumb InputFile `json:"thumb"`
+	Thumb InputFile `json:"thumb,omitempty"`
 }
 
 func (t *Thumber) WithThumb(thumb InputFile) {
