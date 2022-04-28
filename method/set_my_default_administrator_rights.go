@@ -10,6 +10,7 @@ func NewSetMyDefaultAdministratorRights() *SetMyDefaultAdministratorRights {
 	return &SetMyDefaultAdministratorRights{}
 }
 
+// https://core.telegram.org/bots/api#setmydefaultadministratorrights
 type SetMyDefaultAdministratorRights struct {
 	Rights      *types.ChatAdministratorRights `json:"rights,omitempty"`
 	ForChannels bool                           `json:"for_channels,omitempty"`

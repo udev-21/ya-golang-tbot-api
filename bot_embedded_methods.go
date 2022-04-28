@@ -721,3 +721,25 @@ func (ba *BotAPI) SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdmi
 
 	return nil
 }
+
+func (ba *BotAPI) GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdministratorRights) (*types.ChatAdministratorRights, error) {
+	if gmdar == nil {
+		return nil, newError("gmdar required")
+	}
+
+	res, err := ba.Send(nil, gmdar)
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("GetMyDefaultAdministratorRights failed")
+	}
+
+	var tres types.ChatAdministratorRights
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("GetMyDefaultAdministratorRights unmarshal error: " + err.Error())
+	}
+
+	return &tres, nil
+}
