@@ -1,8 +1,6 @@
 package method
 
-import "github.com/udev-21/ya-golang-tbot-api/types/universal"
-
 type AnswerWebAppQuery struct {
-	WebAppQueryID string                      `json:"web_app_query_id"`
-	Result        universal.InlineQueryResult `json:"result"`
+	WebAppQueryID string            `json:"web_app_query_id"`
+	Result        InlineQueryResult `json:"result"`
 }
