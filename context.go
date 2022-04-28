@@ -100,4 +100,5 @@ type Context interface {
 	GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdministratorRights) (*types.ChatAdministratorRights, error)
 	UploadStickerFile(file *method.UploadStickerFile) (*types.File, error)
 	SetStickerPositionInSet(stickerFileID string, position int64) error
+	DeleteStickerFromSet(stickerFileID string) error
 }

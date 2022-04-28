@@ -5,7 +5,7 @@ type ReplyToMessager struct {
 	AllowSendingWithutReply bool   `json:"allow_sending_without_reply,omitempty"`
 }
 
-func (m *ReplyToMessager) WIthReplyToMessageID(id int64) {
+func (m *ReplyToMessager) WithReplyToMessageID(id int64) {
 	m.ReplyToMessageID = &id
 }
 

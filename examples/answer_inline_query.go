@@ -3,9 +3,9 @@ package main
 import (
 	"math/rand"
 
-	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	gtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	"github.com/udev-21/ya-golang-tbot-api/filter"
 	"github.com/udev-21/ya-golang-tbot-api/method"
-	filter "github.com/udev-21/ya-golang-tbot-api/middleware"
 )
 
 func someRandomGenerator() string {
@@ -17,7 +17,7 @@ func someRandomGenerator() string {
 	return string(b)
 }
 
-func handle(ctx yagolangtbotapi.Context) error {
+func handle(ctx gtbotapi.Context) error {
 	var results []method.InlineQueryResult
 	for i := 0; i < 15; i++ {
 		result := method.NewInlineQueryResultPhoto(
@@ -42,7 +42,7 @@ const TOKEN = "BOT:TOKEN"
 // FIRST OF ALL !!!
 // you need to enable inline query status of your bot at @botfather
 func main() {
-	bot := yagolangtbotapi.NewBotAPI(TOKEN)
+	bot := gtbotapi.NewBotAPI(TOKEN)
 
 	bot.Handle(filter.InlineQuery, handle)
 

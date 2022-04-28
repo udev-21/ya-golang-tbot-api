@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
-	filter "github.com/udev-21/ya-golang-tbot-api/middleware"
+	gtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	"github.com/udev-21/ya-golang-tbot-api/filter"
 )
 
-func handle(ctx yagolangtbotapi.Context) error {
+func handle(ctx gtbotapi.Context) error {
 	chatMember, err := ctx.GetChatMember(ctx.Chat(), ctx.Sender().ID)
 
 	if err != nil {
@@ -33,9 +33,9 @@ func handle(ctx yagolangtbotapi.Context) error {
 const TOKEN = "BOT:TOKEN"
 
 func main() {
-	bot := yagolangtbotapi.NewBotAPI(TOKEN)
+	bot := gtbotapi.NewBotAPI(TOKEN)
 
-	bot.Handle(filter.Message, handle, filter.OnlySupergroupOrGroup)
+	bot.Handle(filter.AnyMessage, handle, filter.OnlySupergroupOrGroup)
 
 	bot.Start()
 }

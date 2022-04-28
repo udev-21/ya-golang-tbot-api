@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 
-	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	gtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	"github.com/udev-21/ya-golang-tbot-api/filter"
 	"github.com/udev-21/ya-golang-tbot-api/method"
-	filter "github.com/udev-21/ya-golang-tbot-api/middleware"
 	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
-func handle(ctx yagolangtbotapi.Context) error {
+func handle(ctx gtbotapi.Context) error {
 	//first send new message with inlineKeyboard
 	msg := method.NewSendMessage("new text message")
 	kMarkup := types.NewInlineKeyboard(
@@ -38,7 +38,7 @@ func handle(ctx yagolangtbotapi.Context) error {
 	return nil
 }
 
-func answerCallbackQuery(ctx yagolangtbotapi.Context) error {
+func answerCallbackQuery(ctx gtbotapi.Context) error {
 	log.Println("recieved data: ", ctx.CallbackQuery().Data)
 
 	answerCQ := method.NewAnswerCallbackQuery(ctx.CallbackQuery().ID)
@@ -54,9 +54,9 @@ func answerCallbackQuery(ctx yagolangtbotapi.Context) error {
 const TOKEN = "BOT:TOKEN"
 
 func main() {
-	bot := yagolangtbotapi.NewBotAPI(TOKEN)
+	bot := gtbotapi.NewBotAPI(TOKEN)
 
-	bot.Handle(filter.OnMessage("send"), handle)
+	bot.Handle(filter.OnText("send"), handle)
 	bot.Handle(filter.CallbackQuery, answerCallbackQuery)
 
 	bot.Start()

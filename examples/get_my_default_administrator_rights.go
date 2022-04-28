@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"os"
 
-	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	gtbotapi "github.com/udev-21/ya-golang-tbot-api"
 	"github.com/udev-21/ya-golang-tbot-api/method"
 )
 
 const TOKEN = "BOT:TOKEN"
 
 func main() {
-	bot := yagolangtbotapi.NewBotAPI(TOKEN)
+	bot := gtbotapi.NewBotAPI(TOKEN)
 
 	payload := method.NewGetMyDefaultAdministratorRights()
 	// payload.WithForChannels()

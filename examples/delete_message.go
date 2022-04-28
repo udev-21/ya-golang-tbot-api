@@ -5,13 +5,13 @@ import (
 	"log"
 	"time"
 
-	yagolangtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	gtbotapi "github.com/udev-21/ya-golang-tbot-api"
+	"github.com/udev-21/ya-golang-tbot-api/filter"
 	"github.com/udev-21/ya-golang-tbot-api/method"
-	filter "github.com/udev-21/ya-golang-tbot-api/middleware"
 	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
-func handle(ctx yagolangtbotapi.Context) error {
+func handle(ctx gtbotapi.Context) error {
 	//first send new message to edit this one
 	msg := method.NewSendMessage("new text message")
 	response, err := ctx.Send(ctx.Chat(), msg)
@@ -39,9 +39,9 @@ func handle(ctx yagolangtbotapi.Context) error {
 const TOKEN = "BOT:TOKEN"
 
 func main() {
-	bot := yagolangtbotapi.NewBotAPI(TOKEN)
+	bot := gtbotapi.NewBotAPI(TOKEN)
 
-	bot.Handle(filter.OnMessage("delete"), handle)
+	bot.Handle(filter.OnText("delete"), handle)
 
 	bot.Start()
 }
