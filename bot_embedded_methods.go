@@ -625,3 +625,25 @@ func (ba *BotAPI) DeleteMyCommands(payload *method.DeleteMyCommands) error {
 
 	return nil
 }
+
+func (ba *BotAPI) GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error) {
+	if payload == nil {
+		return nil, newError("payload required")
+	}
+
+	res, err := ba.Send(nil, payload)
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("GetMyCommands failed")
+	}
+
+	var tres []types.BotCommand
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("GetMyCommands unmarshal error: " + err.Error())
+	}
+
+	return tres, nil
+}

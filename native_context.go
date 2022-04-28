@@ -229,3 +229,7 @@ func (n *nativeContext) SetMyCommands(payload *method.SetMyCommands) error {
 func (n *nativeContext) DeleteMyCommands(payload *method.DeleteMyCommands) error {
 	return n.bot.DeleteMyCommands(payload)
 }
+
+func (n *nativeContext) GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error) {
+	return n.bot.GetMyCommands(payload)
+}

@@ -92,4 +92,5 @@ type Context interface {
 	SetChatPermissions(chat *types.Chat, permissions *types.ChatPermissions) error
 	SetMyCommands(payload *method.SetMyCommands) error
 	DeleteMyCommands(payload *method.DeleteMyCommands) error
+	GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error)
 }
