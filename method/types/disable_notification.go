@@ -1,9 +1,9 @@
 package types
 
 type DisableNotificationer struct {
-	DisableNotification_ bool `json:"disable_notification,omitempty"`
+	DisableNotification bool `json:"disable_notification,omitempty"`
 }
 
-func (dn *DisableNotificationer) DisableNotification() {
-	dn.DisableNotification_ = true
+func (dn *DisableNotificationer) WithDisableNotification() {
+	dn.DisableNotification = true
 }

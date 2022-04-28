@@ -1,38 +1,35 @@
 package method
 
 import (
-	"github.com/udev-21/ya-golang-tbot-api/types"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
+func NewGetUserProfilePhotos(userID int64) *GetUserProfilePhotos {
+	return &GetUserProfilePhotos{
+		UserID: userID,
+	}
+}
+
+// https://core.telegram.org/bots/api#getuserprofilephotos
 type GetUserProfilePhotos struct {
 	UserID int64  `json:"user_id"`
 	Offset *int64 `json:"offset,omitempty"`
 	Limit  *int64 `json:"limit,omitempty"`
 }
 
-func (gupp *GetUserProfilePhotos) GetEndpoint() string {
+func (gupp *GetUserProfilePhotos) Endpoint() string {
 	return "getUserProfilePhotos"
 }
 
-func (gupp *GetUserProfilePhotos) RawJsonPayload() (map[string]interface{}, error) {
+func (gupp *GetUserProfilePhotos) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(gupp)
 }
 
-func (gupp *GetUserProfilePhotos) UploadFiles() map[string]types.InputFile {
-	return nil
-}
-
 func (gupp *GetUserProfilePhotos) WithOffset(offset int64) {
-	if gupp.Offset == nil {
-		gupp.Offset = new(int64)
-	}
 	gupp.Offset = &offset
 }
 
 func (gupp *GetUserProfilePhotos) WithLimit(limit int64) {
-	if gupp.Limit == nil {
-		gupp.Limit = new(int64)
-	}
 	gupp.Limit = &limit
 }

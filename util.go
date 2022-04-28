@@ -1,31 +1,10 @@
 package yagolangtbotapi
 
-// func (b *BotAPI) NewMessage(text string) *method.Message {
-// 	return method.NewSendMessage(text)
-// }
+import (
+	"strconv"
 
-// func (b *BotAPI) NewInputFileTelegram(fileID string) *types.InputFileTelegram {
-// 	return &types.InputFileTelegram{
-// 		FileID: fileID,
-// 	}
-// }
-
-// func (b *BotAPI) NewInputFileLocal(file *os.File) *types.InputFileLocal {
-// 	result, err := types.NewInputFileLocal(file)
-// 	if err != nil {
-// 		if b.debug {
-// 			b.logger.Fatal(err.Error())
-// 		}
-// 	}
-// 	return result
-// }
-
-// must be in http format
-// func (b *BotAPI) NewInputFileUrl(url string) *types.InputFileUrl {
-// 	return &types.InputFileUrl{
-// 		Url: url,
-// 	}
-// }
+	"github.com/udev-21/ya-golang-tbot-api/types"
+)
 
 func applyMiddlewares(handler HandlerFunc, middlewares ...Middleware) HandlerFunc {
 	return func(ctx Context) error {
@@ -34,5 +13,20 @@ func applyMiddlewares(handler HandlerFunc, middlewares ...Middleware) HandlerFun
 		}
 		return handler(ctx)
 	}
+}
 
+func getChatID(chat *types.Chat) (string, error) {
+	if chat == nil {
+		return "", newError("chat is required")
+	}
+	var chatID string
+	if chat.ID == 0 {
+		if chat.Username == nil || len(*chat.Username) == 0 {
+			return "", newError("chat is required")
+		}
+		chatID = *chat.Username
+	} else {
+		chatID = strconv.FormatInt(chat.ID, 10)
+	}
+	return chatID, nil
 }

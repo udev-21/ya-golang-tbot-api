@@ -2,15 +2,20 @@ package method
 
 import (
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
-	"github.com/udev-21/ya-golang-tbot-api/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
-type Photo struct {
-	Photo           myTypes.InputFile     `json:"photo"`
-	Caption         *string               `json:"caption,omitempty"`
-	CaptionEntities []types.MessageEntity `json:"caption_entities,omitempty"`
+func NewSendPhoto(photo myTypes.InputFile) *Photo {
+	return &Photo{
+		Photo: photo,
+	}
+}
 
+// https://core.telegram.org/bots/api#sendphoto
+type Photo struct {
+	Photo myTypes.InputFile `json:"photo"`
+
+	myTypes.Captioner
 	myTypes.ProtectContenter
 	myTypes.ReplyToMessager
 	myTypes.ReplyMarkuper

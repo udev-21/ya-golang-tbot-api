@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"time"
 
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
@@ -41,7 +41,7 @@ func NewBotAPI(token string) *BotAPI {
 		poller:     NewLongPoller(),
 		updates:    make(chan types.Update, 200),
 	}
-	res.telegramAPIUrl = "https://api.telegram.org/bot" + token + "/"
+	res.telegramAPIUrl = "https://api.telegram.org/"
 	return &res
 }
 
@@ -58,15 +58,7 @@ func (ba *BotAPI) WithLogger(logger *log.Logger) *BotAPI {
 	return ba
 }
 
-func (ba *BotAPI) GetMe() (*types.ApiResponse, error) {
-	return ba.request("getMe", map[string]interface{}{})
-}
 func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
-
-	// bodyMap, err := payload.Params()
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	body, err := json.Marshal(payload)
 	if err != nil {
@@ -93,7 +85,7 @@ func (ba *BotAPI) GetUpdates(payload myTypes.Sendable) ([]types.Update, error) {
 	defer response.Body.Close()
 	err = json.NewDecoder(response.Body).Decode(&res)
 	if err != nil {
-		return nil, fmt.Errorf("parse response error")
+		return nil, fmt.Errorf("parse response error: " + err.Error())
 	}
 
 	if !res.OK {
@@ -117,15 +109,14 @@ func (ba *BotAPI) Handle(condition Middleware, handler HandlerFunc, additionalMi
 	ba.handlers = append(ba.handlers, handler)
 }
 
-func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
-
+func request(endpoint string, params myTypes.Params, client *http.Client) ([]byte, error) {
 	p, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 	body := bytes.NewBuffer(p)
 
-	request, err := http.NewRequest(http.MethodPost, ba.getPath(endpoint), body)
+	request, err := http.NewRequest(http.MethodPost, endpoint, body)
 
 	if err != nil {
 		return nil, err
@@ -133,13 +124,29 @@ func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiRes
 
 	request.Header.Set("Content-Type", "application/json")
 
-	response, err := ba.httpClient.Do(request)
+	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (ba *BotAPI) request(endpoint string, params myTypes.Params) (*types.ApiResponse, error) {
+	body, err := request(ba.getPath(endpoint), params, ba.httpClient)
+	if err != nil {
+		return nil, err
+	}
 	var res types.ApiResponse
-	json.NewDecoder(response.Body).Decode(&res)
+	err = json.Unmarshal(body, &res)
+	if err != nil {
+		return nil, err
+	}
+
 	return &res, nil
 }
 
@@ -280,8 +287,6 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 		} else {
 			data["chat_id"] = chat.Username
 		}
-	} else {
-		os.Exit(123)
 	}
 
 	// log.Println(data)
@@ -295,19 +300,26 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 
 }
 
-func (b BotAPI) getPath(endpoint string) string {
-	middle := ""
+func (b *BotAPI) getPath(endpoint string) string {
+	middle := "/"
 	if b.testEnvironment {
-		middle = "test/"
+		middle = "/test/"
 	}
-	return b.telegramAPIUrl + middle + endpoint
+	log.Println(b.telegramAPIUrl + "bot" + b.token + middle + endpoint)
+	return b.telegramAPIUrl + "bot" + b.token + middle + endpoint
+}
+
+func (b *BotAPI) getFilePath(filePath string) string {
+	middle := "/"
+	if b.testEnvironment {
+		middle = "/test/"
+	}
+	return b.telegramAPIUrl + "file/bot" + b.token + middle + filePath
 }
 
 func (b *BotAPI) Start() {
 	if b.poller == nil {
 		panic("golangtbotapi: can't start without a poller")
-	} else if b.logger == nil {
-		panic("golangtbotapi: can't start without logger")
 	}
 
 	writeLog(LogLevelInfo, b.logger, "starting bot long polling")
@@ -319,9 +331,6 @@ func (b *BotAPI) Start() {
 		b.poller.Poll(b, b.updates, stop)
 		close(stopConfirm)
 	}()
-
-	log.Println("after poller")
-	// time.Sleep(2 * time.Second)
 
 	for {
 		select {

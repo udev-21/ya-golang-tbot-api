@@ -35,7 +35,7 @@ func (p *internalLongPoller) Poll(b *BotAPI, dest chan types.Update, stop chan s
 		}
 
 		if err != nil {
-			writeLog(LogLevelError, b.logger, "can't get updates")
+			writeLog(LogLevelError, b.logger, err.Error())
 			continue
 		}
 

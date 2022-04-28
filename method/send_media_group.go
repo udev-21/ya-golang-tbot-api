@@ -7,6 +7,13 @@ import (
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
+func NewSendMediaGroup(media []myTypes.InputMedia) *MediaGroup {
+	return &MediaGroup{
+		Media: media,
+	}
+}
+
+// https://core.telegram.org/bots/api#sendmediagroup
 type MediaGroup struct {
 	Media []myTypes.InputMedia `json:"media"`
 

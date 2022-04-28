@@ -1,14 +1,7 @@
 package types
 
-import (
-	"fmt"
-	"reflect"
-)
-
-type BotCommandScope struct {
-	Type   string      `json:"type"`
-	ChatID interface{} `json:"chat_id,omitempty"`
-	UserID *int64      `json:"user_id,omitempty"`
+type BotCommandScope interface {
+	IsBotCommandScope()
 }
 
 const (
@@ -21,63 +14,94 @@ const (
 	BotCommandScopeChatMemberType            = "chat_member"
 )
 
-func NewBotCommandScopeDefault() BotCommandScope {
-	return BotCommandScope{
-		Type: BotCommandScopeDefaultType,
+type BaseBotCommandScope struct {
+	Type string `json:"type"`
+}
+
+func (bbcs *BaseBotCommandScope) IsBotCommandScope() {}
+
+type BotCommandScopeDefault struct {
+	BaseBotCommandScope
+}
+
+func NewBotCommandScopeDefault() *BotCommandScopeDefault {
+	return &BotCommandScopeDefault{
+		BaseBotCommandScope: BaseBotCommandScope{
+			Type: BotCommandScopeDefaultType,
+		},
 	}
 }
 
-func NewBotCommandScopeAllPrivateChats() BotCommandScope {
-	return BotCommandScope{
-		Type: BotCommandScopeAllPrivateChatsType,
+type BotCommandScopeAllPrivateChats struct {
+	BaseBotCommandScope
+}
+
+func NewBotCommandScopeAllPrivateChats() *BotCommandScopeAllPrivateChats {
+	return &BotCommandScopeAllPrivateChats{
+		BaseBotCommandScope: BaseBotCommandScope{
+			Type: BotCommandScopeAllPrivateChatsType,
+		},
 	}
 }
 
-func NewBotCommandScopeAllGroupChats() BotCommandScope {
-	return BotCommandScope{
-		Type: BotCommandScopeAllPrivateChatsType,
+type BotCommandScopeAllGroupChats struct {
+	BaseBotCommandScope
+}
+
+func NewBotCommandScopeAllGroupChats() *BotCommandScopeAllGroupChats {
+	return &BotCommandScopeAllGroupChats{
+		BaseBotCommandScope: BaseBotCommandScope{
+			Type: BotCommandScopeAllPrivateChatsType,
+		},
 	}
 }
 
-// chatID Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-// must be int64 or string
-func NewBotCommandScopeChat(chatID interface{}) (BotCommandScope, error) {
-	if isValidChatID(chatID) {
-		return newBotCommandScope(BotCommandScopeChatType, chatID), nil
-	}
-	return BotCommandScope{}, fmt.Errorf("chatID must be string or int64")
+type BotCommandScopeAllChatAdministrators struct {
+	BaseBotCommandScope
 }
 
-// chatID Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-// must be int64 or string
-func NewBotCommandScopeChatAdministrators(chatID interface{}) (BotCommandScope, error) {
-	if isValidChatID(chatID) {
-		return newBotCommandScope(BotCommandScopeChatAdministratorsType, chatID), nil
-	}
-	return BotCommandScope{}, fmt.Errorf("chatID must be string or int64")
-}
-
-// chatID Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-// must be int64 or string
-func NewBotCommandScopeChatMember(userID int64, chatID interface{}) (BotCommandScope, error) {
-	if isValidChatID(chatID) {
-		return BotCommandScope{
-			Type:   BotCommandScopeChatMemberType,
-			UserID: &userID,
-			ChatID: chatID,
-		}, nil
-	}
-	return BotCommandScope{}, fmt.Errorf("chatID must be string or int64")
-}
-
-func newBotCommandScope(scopeType string, chatID interface{}) BotCommandScope {
-	return BotCommandScope{
-		Type:   scopeType,
-		ChatID: chatID,
+func NewBotCommandScopeAllChatAdministrators() *BotCommandScopeAllChatAdministrators {
+	return &BotCommandScopeAllChatAdministrators{
+		BaseBotCommandScope: BaseBotCommandScope{
+			Type: BotCommandScopeAllChatAdministratorsType,
+		},
 	}
 }
 
-func isValidChatID(chatID interface{}) bool {
-	kind := reflect.TypeOf(chatID).Kind()
-	return kind == reflect.String || kind == reflect.Int64
+type BotCommandScopeChat struct {
+	BaseBotCommandScope
+	ChatID string `json:"chat_id"`
+}
+
+func NewBotCommandScopeChat(chatID string) *BotCommandScopeChat {
+	return &BotCommandScopeChat{
+		BaseBotCommandScope: BaseBotCommandScope{Type: BotCommandScopeChatType},
+		ChatID:              chatID,
+	}
+}
+
+type BotCommandScopeChatAdministrators struct {
+	BaseBotCommandScope
+	ChatID string `json:"chat_id"`
+}
+
+func NewBotCommandScopeChatAdministrators(chatID string) *BotCommandScopeChatAdministrators {
+	return &BotCommandScopeChatAdministrators{
+		BaseBotCommandScope: BaseBotCommandScope{Type: BotCommandScopeChatAdministratorsType},
+		ChatID:              chatID,
+	}
+}
+
+type BotCommandScopeChatMember struct {
+	BaseBotCommandScope
+	ChatID string `json:"chat_id"`
+	UserID int64  `json:"user_id"`
+}
+
+func NewBotCommandScopeChatMember(chatID string, userID int64) *BotCommandScopeChatMember {
+	return &BotCommandScopeChatMember{
+		BaseBotCommandScope: BaseBotCommandScope{Type: BotCommandScopeChatMemberType},
+		UserID:              userID,
+		ChatID:              chatID,
+	}
 }
