@@ -13,6 +13,7 @@ import (
 func handle(ctx gtbotapi.Context) error {
 
 	file1 := mTypes.NewFilePath("assets/image2.jpg")
+	file1.SetCustomFileName("awesome-image.jpg")
 	file2 := mTypes.NewFilePath("assets/image.jpg")
 
 	thumb1 := mTypes.NewFilePath("assets/thumb.jpg")
@@ -20,6 +21,7 @@ func handle(ctx gtbotapi.Context) error {
 
 	media1 := mTypes.NewInputMediaDocument(file1)
 	media1.WithCaption("caption1")
+
 	media2 := mTypes.NewInputMediaDocument(file2)
 	media2.WithCaption("caption2")
 
