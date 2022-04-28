@@ -233,3 +233,7 @@ func (n *nativeContext) DeleteMyCommands(payload *method.DeleteMyCommands) error
 func (n *nativeContext) GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error) {
 	return n.bot.GetMyCommands(payload)
 }
+
+func (n *nativeContext) SetChatMenuButton(button *method.SetChatMenuButton) error {
+	return n.bot.SetChatMenuButton(button)
+}

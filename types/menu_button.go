@@ -1,9 +1,7 @@
 package types
 
-type MenuButton struct {
-	Type   string      `json:"type"`
-	Text   *string     `json:"text,omitempty"`
-	WebApp *WebAppInfo `json:"web_app,omitempty"`
+type MenuButton interface {
+	IsMenuButton()
 }
 
 const (
@@ -12,17 +10,46 @@ const (
 	MenuButtonDefaultType  = "default"
 )
 
-var MenuButtonCommands = MenuButton{
-	Type: MenuButtonCommandsType,
-}
-var MenuButtonDefault = MenuButton{
-	Type: MenuButtonDefaultType,
+type BaseMenuButton struct {
+	Type string `json:"type"`
 }
 
-func NewMenuButtonWebApp(text string, webApp WebAppInfo) MenuButton {
-	return MenuButton{
-		Type:   MenuButtonWebAppType,
-		Text:   &text,
-		WebApp: &webApp,
+type MenuButtonCommands struct {
+	BaseMenuButton
+}
+
+func NewMenuButtonCommands() *MenuButtonCommands {
+	return &MenuButtonCommands{
+		BaseMenuButton: BaseMenuButton{
+			Type: MenuButtonCommandsType,
+		},
+	}
+}
+
+type MenuButtonWebApp struct {
+	BaseMenuButton
+	Text   string     `json:"text"`
+	WebApp WebAppInfo `json:"web_app"`
+}
+
+func NewMenuButtonWebApp(text string, webApp WebAppInfo) *MenuButtonWebApp {
+	return &MenuButtonWebApp{
+		BaseMenuButton: BaseMenuButton{
+			Type: MenuButtonWebAppType,
+		},
+		Text:   text,
+		WebApp: webApp,
+	}
+}
+
+type MenuButtonDefault struct {
+	BaseMenuButton
+}
+
+func NewMenuButtonDefault() *MenuButtonDefault {
+	return &MenuButtonDefault{
+		BaseMenuButton: BaseMenuButton{
+			Type: BotCommandScopeDefaultType,
+		},
 	}
 }

@@ -647,3 +647,27 @@ func (ba *BotAPI) GetMyCommands(payload *method.GetMyCommands) ([]types.BotComma
 
 	return tres, nil
 }
+
+func (ba *BotAPI) SetChatMenuButton(button *method.SetChatMenuButton) error {
+	if button == nil {
+		return newError("button required")
+	}
+
+	res, err := ba.Send(nil, button)
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("SetChatMenuButton failed")
+	}
+
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("SetChatMenuButton unmarshal error: " + err.Error())
+	} else if !tres {
+		return newError("SetChatMenuButton failed")
+	}
+
+	return nil
+}

@@ -93,4 +93,5 @@ type Context interface {
 	SetMyCommands(payload *method.SetMyCommands) error
 	DeleteMyCommands(payload *method.DeleteMyCommands) error
 	GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error)
+	SetChatMenuButton(button *method.SetChatMenuButton) error
 }
