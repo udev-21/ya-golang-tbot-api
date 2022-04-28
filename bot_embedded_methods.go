@@ -743,3 +743,18 @@ func (ba *BotAPI) GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdmi
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) UploadStickerFile(file *method.UploadStickerFile) (*types.File, error) {
+	if file == nil {
+		return nil, newError("payload required")
+	}
+	res, err := ba.Send(nil, file)
+	if err != nil {
+		return nil, err
+	}
+	var tres types.File
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, err
+	}
+	return &tres, nil
+}

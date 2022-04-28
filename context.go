@@ -98,4 +98,5 @@ type Context interface {
 	GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error)
 	SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdministratorRights) error
 	GetMyDefaultAdministratorRights(gmdar *method.GetMyDefaultAdministratorRights) (*types.ChatAdministratorRights, error)
+	UploadStickerFile(file *method.UploadStickerFile) (*types.File, error)
 }
