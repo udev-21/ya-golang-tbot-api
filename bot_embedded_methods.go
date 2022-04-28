@@ -671,3 +671,29 @@ func (ba *BotAPI) SetChatMenuButton(button *method.SetChatMenuButton) error {
 
 	return nil
 }
+
+func (ba *BotAPI) GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error) {
+	params := map[string]interface{}{}
+	if chat != nil {
+		chatID, err := getChatID(chat)
+		if err == nil {
+			params["chat_id"] = chatID
+		}
+	}
+
+	res, err := ba.request("getChatMenuButton", params)
+
+	if err != nil {
+		return nil, err
+	} else if !res.OK {
+		return nil, newError("getChatMenuButton failed")
+	}
+
+	var tres types.MenuButton
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return nil, newError("getChatMenuButton unmarshal error: " + err.Error())
+	}
+
+	return &tres, nil
+}

@@ -94,4 +94,6 @@ type Context interface {
 	DeleteMyCommands(payload *method.DeleteMyCommands) error
 	GetMyCommands(payload *method.GetMyCommands) ([]types.BotCommand, error)
 	SetChatMenuButton(button *method.SetChatMenuButton) error
+	// pass nil to chat for get default one
+	GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error)
 }

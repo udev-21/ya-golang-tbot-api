@@ -237,3 +237,7 @@ func (n *nativeContext) GetMyCommands(payload *method.GetMyCommands) ([]types.Bo
 func (n *nativeContext) SetChatMenuButton(button *method.SetChatMenuButton) error {
 	return n.bot.SetChatMenuButton(button)
 }
+
+func (n *nativeContext) GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error) {
+	return n.bot.GetChatMenuButton(chat)
+}

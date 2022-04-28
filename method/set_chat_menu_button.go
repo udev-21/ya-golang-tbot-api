@@ -11,8 +11,8 @@ func NewSetChatMenuButton() *SetChatMenuButton {
 }
 
 type SetChatMenuButton struct {
-	ChatID     *int64            `json:"chat_id"`
-	MenuButton *types.MenuButton `json:"menu_button,omitempty"`
+	ChatID     *int64             `json:"chat_id"`
+	MenuButton *types.IMenuButton `json:"menu_button,omitempty"`
 }
 
 func (scmb *SetChatMenuButton) Endpoint() string {
@@ -23,7 +23,7 @@ func (scmb *SetChatMenuButton) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(scmb)
 }
 
-func (scmb *SetChatMenuButton) WithMenuButton(menuButton types.MenuButton) {
+func (scmb *SetChatMenuButton) WithMenuButton(menuButton types.IMenuButton) {
 	scmb.MenuButton = &menuButton
 }
 
