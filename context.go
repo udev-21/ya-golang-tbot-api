@@ -96,4 +96,5 @@ type Context interface {
 	SetChatMenuButton(button *method.SetChatMenuButton) error
 	// pass nil to chat for get default one
 	GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error)
+	SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdministratorRights) error
 }

@@ -241,3 +241,7 @@ func (n *nativeContext) SetChatMenuButton(button *method.SetChatMenuButton) erro
 func (n *nativeContext) GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error) {
 	return n.bot.GetChatMenuButton(chat)
 }
+
+func (n *nativeContext) SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdministratorRights) error {
+	return n.bot.SetMyDefaultAdministratorRights(smdar)
+}

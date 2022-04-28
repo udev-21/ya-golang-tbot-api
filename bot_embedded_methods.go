@@ -697,3 +697,27 @@ func (ba *BotAPI) GetChatMenuButton(chat *types.Chat) (*types.MenuButton, error)
 
 	return &tres, nil
 }
+
+func (ba *BotAPI) SetMyDefaultAdministratorRights(smdar *method.SetMyDefaultAdministratorRights) error {
+	if smdar == nil {
+		return newError("smdar required")
+	}
+
+	res, err := ba.Send(nil, smdar)
+
+	if err != nil {
+		return err
+	} else if !res.OK {
+		return newError("SetMyDefaultAdministratorRights failed")
+	}
+
+	var tres bool
+
+	if err := json.Unmarshal(res.Result, &tres); err != nil {
+		return newError("SetMyDefaultAdministratorRights unmarshal error: " + err.Error())
+	} else if !tres {
+		return newError("SetMyDefaultAdministratorRights failed")
+	}
+
+	return nil
+}
