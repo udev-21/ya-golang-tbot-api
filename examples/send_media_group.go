@@ -16,8 +16,7 @@ func handle(ctx gtbotapi.Context) error {
 	file1.SetCustomFileName("awesome-image.jpg")
 	file2 := mTypes.NewFilePath("assets/image.jpg")
 
-	thumb1 := mTypes.NewFilePath("assets/thumb.jpg")
-	thumb2 := mTypes.NewFilePath("assets/thumb2.jpg")
+	thumb := mTypes.NewFilePath("assets/thumb2.jpg")
 
 	media1 := mTypes.NewInputMediaDocument(file1)
 	media1.WithCaption("caption1")
@@ -25,8 +24,7 @@ func handle(ctx gtbotapi.Context) error {
 	media2 := mTypes.NewInputMediaDocument(file2)
 	media2.WithCaption("caption2")
 
-	media1.WithThumb(thumb1)
-	media2.WithThumb(thumb2)
+	media2.WithThumb(thumb)
 
 	allMedias := []mTypes.SendMediaGroupable{
 		media1,
