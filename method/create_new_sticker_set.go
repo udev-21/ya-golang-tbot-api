@@ -6,34 +6,33 @@ import (
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
-type CreateNewStickerSet struct {
-	UserID int64  `json:"user_id"`
-	Name   string `json:"name"`
-	Title  string `json:"title"`
-	Emojis string `json:"emojis"`
-
-	PngSticker    myTypes.InputFile   `json:"png_sticker,omitempty"`
-	TgSticker     *myTypes.FilePath   `json:"tg_sticker,omitempty"`
-	WebmSticker   *myTypes.FilePath   `json:"webm_sticker,omitempty"`
-	ContainsMasks bool                `json:"contains_masks,omitempty"`
-	MaskPosition  *types.MaskPosition `json:"mask_position,omitempty"`
+type StickerSetBase struct {
+	UserID       int64               `json:"user_id"`
+	Emojis       string              `json:"emojis"`
+	Name         string              `json:"name"`
+	PngSticker   myTypes.InputFile   `json:"png_sticker,omitempty"`
+	TgSticker    *myTypes.FilePath   `json:"tg_sticker,omitempty"`
+	WebmSticker  *myTypes.FilePath   `json:"webm_sticker,omitempty"`
+	MaskPosition *types.MaskPosition `json:"mask_position,omitempty"`
 }
 
-func (cnss *CreateNewStickerSet) Endpoint() string {
-	return "createNewStickerSet"
-}
-func (cnss *CreateNewStickerSet) Params() (myTypes.Params, error) {
-	tmp, err := utils.ConvertToMapStringInterface(cnss)
-	if err != nil {
-		return nil, err
-	}
-	tmp["png_sticker"] = cnss.PngSticker
-	tmp["tg_sticker"] = cnss.TgSticker
-	tmp["webm_sticker"] = cnss.WebmSticker
-	return tmp, nil
+func (c *StickerSetBase) WithPngSticker(pngSticker myTypes.InputFile) {
+	c.PngSticker = pngSticker
 }
 
-func (cnss *CreateNewStickerSet) Files() []myTypes.InputFile {
+func (c *StickerSetBase) WithTgSticker(tgSticker myTypes.FilePath) {
+	c.TgSticker = &tgSticker
+}
+
+func (c *StickerSetBase) WithWebmSticker(webmSticker myTypes.FilePath) {
+	c.WebmSticker = &webmSticker
+}
+
+func (c *StickerSetBase) WithMaskPosition(mp types.MaskPosition) {
+	c.MaskPosition = &mp
+}
+
+func (cnss *StickerSetBase) Files() []myTypes.InputFile {
 	var files []myTypes.InputFile
 	if tmp, ok := cnss.PngSticker.(myTypes.Uploadable); ok {
 		tmp.SetField("png_sticker")
@@ -51,22 +50,42 @@ func (cnss *CreateNewStickerSet) Files() []myTypes.InputFile {
 	return files
 }
 
-func (c *CreateNewStickerSet) WithPngSticker(pngSticker myTypes.InputFile) {
-	c.PngSticker = pngSticker
+func NewCreateNewStickerSet(userID int64, name, title, emojis string) *CreateNewStickerSet {
+	return &CreateNewStickerSet{
+		Title: title,
+		StickerSetBase: StickerSetBase{
+			UserID: userID,
+			Name:   name,
+			Emojis: emojis,
+		},
+	}
 }
 
-func (c *CreateNewStickerSet) WithTgSticker(tgSticker myTypes.FilePath) {
-	c.TgSticker = &tgSticker
+type CreateNewStickerSet struct {
+	Title         string `json:"title"`
+	ContainsMasks bool   `json:"contains_masks,omitempty"`
+	StickerSetBase
 }
 
-func (c *CreateNewStickerSet) WithWebmSticker(webmSticker myTypes.FilePath) {
-	c.WebmSticker = &webmSticker
+func (cnss *CreateNewStickerSet) Endpoint() string {
+	return "createNewStickerSet"
+}
+
+func (cnss *CreateNewStickerSet) Params() (myTypes.Params, error) {
+	tmp, err := utils.ConvertToMapStringInterface(cnss)
+	if err != nil {
+		return nil, err
+	}
+	tmp["png_sticker"] = cnss.PngSticker
+	tmp["tg_sticker"] = cnss.TgSticker
+	tmp["webm_sticker"] = cnss.WebmSticker
+	return tmp, nil
+}
+
+func (cnss *CreateNewStickerSet) Files() []myTypes.InputFile {
+	return cnss.StickerSetBase.Files()
 }
 
 func (c *CreateNewStickerSet) WithContainsMasks() {
 	c.ContainsMasks = true
-}
-
-func (c *CreateNewStickerSet) WithMaskPosition(mp types.MaskPosition) {
-	c.MaskPosition = &mp
 }
