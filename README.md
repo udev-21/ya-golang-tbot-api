@@ -1,6 +1,7 @@
 # Telegram bot api client for golang
-yet another Golang framework for Telegram Bot API client
-
+yet another Golang framework for Telegram Bot API client ([Telegram Passport](https://core.telegram.org/passport) included)
+> I've seen, there's a lot good frameworks for this stuff, but without passport
+> so that was my motivate ;)
 
 ```bash
 go get -u github.com/udev-21/ya-golang-tbot-api
@@ -18,10 +19,7 @@ This is an API client library for [Telegram Bot API](https://core.telegram.org/b
 Of course PR's and Forks are welcome :)
 
 ## Features
-Here is some features list that I think **simple**  and **useful**:
 - [Filters](https://github.com/udev-21/ya-golang-tbot-api#filters)
-- [Logging](https://github.com/udev-21/ya-golang-tbot-api#logging)
-- []
 
 
 ## Simple Echo Bot
@@ -71,11 +69,13 @@ Here's some examples for using them:
 ```go
 bot.Handle(filter.OnAnyText, yourHandlerFunc) // filter for: anyText message anywhere: private,group,supergroup
 
-bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroup) // filter for: only supergroup and any text
+bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroup) // filter for: only supergroup and any text message
 
-bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroupOrGroup) // filter for: only (supergroup or group) and any text
+bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroupOrGroup) // filter for: only (supergroup or group) and any text message
 
-bot.Handle(filter.AnyText, yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and any text 
+bot.Handle(filter.OnAnyText, yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and any text message
+
+bot.Handle(filter.OnText("ping"), yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and text message == "ping"
 ```
 
 
