@@ -172,9 +172,7 @@ func uploadFile(r *io.PipeReader, w *io.PipeWriter, uploadable myTypes.Uploadabl
 		w.CloseWithError(err)
 		return
 	}
-	log.Println("\nsetting file: ")
-	log.Println(uploadable.Field(), uploadable.FileName())
-	log.Println()
+
 	part, err := m.CreateFormFile(uploadable.Field(), uploadable.FileName())
 	if err != nil {
 		w.CloseWithError(err)
@@ -250,10 +248,13 @@ func (ba *BotAPI) requestWithFiles(reciever interface{}, endpoint string, sendab
 				}
 			} else {
 				val, err := json.Marshal(value)
-				log.Printf("field(%q) value(%s)", field, val)
 				if err != nil {
 					w.CloseWithError(err)
 					return
+				}
+				if ba.debug {
+					writeLog(LogLevelInfo, ba.logger, "setting field(%q) with value(%s)", field, val)
+
 				}
 				if err := m.WriteField(field, string(val)); err != nil {
 					w.CloseWithError(err)
@@ -332,7 +333,6 @@ func (b *BotAPI) getPath(endpoint string) string {
 	if b.testEnvironment {
 		middle = "/test/"
 	}
-	log.Println(b.telegramAPIUrl + "bot" + b.token + middle + endpoint)
 	return b.telegramAPIUrl + "bot" + b.token + middle + endpoint
 }
 
@@ -354,7 +354,7 @@ func (b *BotAPI) Start() {
 	stopConfirm := make(chan struct{})
 
 	go func() {
-		log.Println("poller gone")
+		writeLog(LogLevelInfo, b.logger, "starting polling")
 		b.poller.Poll(b, b.updates, stop)
 		close(stopConfirm)
 	}()
@@ -372,6 +372,13 @@ func (b *BotAPI) Start() {
 			return
 		}
 	}
+}
+
+// Stop gracefully shuts the poller down.
+func (b *BotAPI) Stop() {
+	confirm := make(chan struct{})
+	b.stop <- confirm
+	<-confirm
 }
 
 func (b *BotAPI) DecryptPassportData(passportData *types.PassportData) error {
