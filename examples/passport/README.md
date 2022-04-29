@@ -29,7 +29,8 @@ Configure your index.html with your
 </script>
 ```
 
-after that run example.go file:
+after that open index.html on your browser and click on button, after 
+telegram successfully send your data to bot, run example.go file:
 ```sh
 go run example.go
 ```
