@@ -10,6 +10,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"time"
 
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
@@ -347,6 +348,12 @@ func (b *BotAPI) getFilePath(filePath string) string {
 func (b *BotAPI) Start() {
 	if b.poller == nil {
 		panic("golangtbotapi: can't start without a poller")
+	}
+	_, err := b.GetMe()
+	if err != nil {
+		writeLog(LogLevelError, b.logger, "can't init bot")
+		log.Println("can't init bot")
+		os.Exit(1)
 	}
 
 	writeLog(LogLevelInfo, b.logger, "starting bot long polling")
