@@ -5,7 +5,7 @@ import (
 	"github.com/udev-21/ya-golang-tbot-api/types"
 )
 
-func AnyMessage(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
+func OnAnyMessage(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 	return func(ctx golangtbotapi.Context) error {
 		if ctx.Message() != nil {
 			next(ctx)
@@ -16,7 +16,7 @@ func AnyMessage(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
 
 func OnText(text string) golangtbotapi.Middleware {
 	return func(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
-		return AnyMessage(func(ctx golangtbotapi.Context) error {
+		return OnAnyMessage(func(ctx golangtbotapi.Context) error {
 			if ctx.Message().Text != nil && *ctx.Message().Text == text {
 				next(ctx)
 			}
@@ -25,15 +25,13 @@ func OnText(text string) golangtbotapi.Middleware {
 	}
 }
 
-func OnAnyText() golangtbotapi.Middleware {
-	return func(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
-		return AnyMessage(func(ctx golangtbotapi.Context) error {
-			if ctx.Message().Text != nil {
-				next(ctx)
-			}
-			return nil
-		})
-	}
+func OnAnyText(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
+	return OnAnyMessage(func(ctx golangtbotapi.Context) error {
+		if ctx.Message().Text != nil {
+			next(ctx)
+		}
+		return nil
+	})
 }
 
 func EditedMessage(next golangtbotapi.HandlerFunc) golangtbotapi.HandlerFunc {
