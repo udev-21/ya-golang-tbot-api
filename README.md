@@ -82,5 +82,3 @@ bot.Handle(filter.OnAnyText, yourHandlerFunc, filter.OnlyPrivate)
 bot.Handle(filter.OnText("ping"), yourHandlerFunc, filter.OnlyPrivate) 
 ```
 
-
-## Logging
