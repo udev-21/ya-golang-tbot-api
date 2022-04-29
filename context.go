@@ -69,7 +69,8 @@ type Context interface {
 	// Returns nil if chat is not presented.
 	Chat() *types.Chat
 
-	// after this line goes "bot embedded" methods like
+	// after this line goes "bot embedded" methods
+	SetWebhook(payload *method.SetWebhook) error
 	GetFile(fileID string) (*types.File, error)
 	DownloadFile(file *types.File, dest io.Writer) error
 	LeaveChat(chat *types.Chat) error

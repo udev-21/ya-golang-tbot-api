@@ -802,3 +802,25 @@ func (ba *BotAPI) DeleteStickerFromSet(stickerFileID string) error {
 
 	return nil
 }
+func (ba *BotAPI) SetWebhook(payload *method.SetWebhook) error {
+	if payload == nil {
+		return newError("payload required")
+	}
+
+	res, err := ba.Send(nil, payload)
+
+	if err != nil {
+		return newError(err.Error())
+	} else if !res.OK {
+		return newError("SetWebhook failed")
+	}
+
+	var tres bool
+
+	json.Unmarshal(res.Result, &res)
+	if !tres {
+		return newError("SetWebhook failed")
+	}
+
+	return nil
+}

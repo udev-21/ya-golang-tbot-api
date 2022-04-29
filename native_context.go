@@ -265,3 +265,7 @@ func (n *nativeContext) DeleteStickerFromSet(stickerFileID string) error {
 func (n *nativeContext) DecryptPassportData(passportData *types.PassportData) error {
 	return n.bot.DecryptPassportData(passportData)
 }
+
+func (n *nativeContext) SetWebhook(payload *method.SetWebhook) error {
+	return n.bot.SetWebhook(payload)
+}
