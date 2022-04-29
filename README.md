@@ -66,15 +66,20 @@ Full list of filters you can find in [here](https://github.com/udev-21/ya-golang
 
 Here's some examples for using them:
 ```go
-bot.Handle(filter.OnAnyText, yourHandlerFunc) // filter for: anyText message anywhere: private,group,supergroup
+// filter for: anyText message anywhere: private,group,supergroup
+bot.Handle(filter.OnAnyText, yourHandlerFunc)
 
-bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroup) // filter for: only supergroup and any text message
+// filter for: only supergroup and any text message
+bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroup)
 
-bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroupOrGroup) // filter for: only (supergroup or group) and any text message
+// filter for: only (supergroup or group) and any text message
+bot.Handle(filter.OnAnyText, yourHandlerFunc,filter.OnlySupergroupOrGroup) 
 
-bot.Handle(filter.OnAnyText, yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and any text message
+// filter for: only private and any text message
+bot.Handle(filter.OnAnyText, yourHandlerFunc, filter.OnlyPrivate) 
 
-bot.Handle(filter.OnText("ping"), yourHandlerFunc, filter.OnlyPrivate) // filter for: only private and text message == "ping"
+// filter for: only private and text message == "ping"
+bot.Handle(filter.OnText("ping"), yourHandlerFunc, filter.OnlyPrivate) 
 ```
 
 
