@@ -18,6 +18,8 @@ This is an API client library for [Telegram Bot API](https://core.telegram.org/b
 Of course PR's and Forks are welcome :)
 
 ## Features
+- Full Telegram Bot API 6.0 support
+- **Zero** dependency
 - [Filters](https://github.com/udev-21/ya-golang-tbot-api#filters)
 
 
