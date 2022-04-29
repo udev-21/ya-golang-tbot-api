@@ -373,3 +373,10 @@ func (b *BotAPI) Start() {
 		}
 	}
 }
+
+func (b *BotAPI) DecryptPassportData(passportData *types.PassportData) error {
+	if passportData == nil {
+		return newError("passportData required")
+	}
+	return passportData.DecryptAllFields(&b.privateKey)
+}

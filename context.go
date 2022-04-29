@@ -101,4 +101,6 @@ type Context interface {
 	UploadStickerFile(file *method.UploadStickerFile) (*types.File, error)
 	SetStickerPositionInSet(stickerFileID string, position int64) error
 	DeleteStickerFromSet(stickerFileID string) error
+
+	DecryptPassportData(passportData *types.PassportData) error
 }

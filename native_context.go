@@ -261,3 +261,7 @@ func (n *nativeContext) SetStickerPositionInSet(stickerFileID string, position i
 func (n *nativeContext) DeleteStickerFromSet(stickerFileID string) error {
 	return n.bot.DeleteStickerFromSet(stickerFileID)
 }
+
+func (n *nativeContext) DecryptPassportData(passportData *types.PassportData) error {
+	return n.bot.DecryptPassportData(passportData)
+}
