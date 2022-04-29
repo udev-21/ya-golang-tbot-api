@@ -12,6 +12,12 @@ func (ba *BotAPI) GetMe() (*types.User, error) {
 	res, err := ba.request("getMe", nil)
 	if err != nil {
 		return nil, newError(err.Error())
+	} else if !res.OK {
+		p := ""
+		if res.Description != nil {
+			p = *res.Description
+		}
+		return nil, newError(p)
 	}
 	var response types.User
 	bytes, err := json.Marshal(res.Result)

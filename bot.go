@@ -346,16 +346,16 @@ func (b *BotAPI) getFilePath(filePath string) string {
 }
 
 func (b *BotAPI) Start() {
+	log.Println("starting...")
 	if b.poller == nil {
 		panic("golangtbotapi: can't start without a poller")
 	}
 	_, err := b.GetMe()
 	if err != nil {
-		writeLog(LogLevelError, b.logger, "can't init bot")
-		log.Println("can't init bot")
+		writeLog(LogLevelError, b.logger, "can't init bot make sure TOKEN is correct and webhook is not set")
+		log.Println("can't init bot make sure TOKEN is correct and webhook is not set")
 		os.Exit(1)
 	}
-
 	writeLog(LogLevelInfo, b.logger, "starting bot long polling")
 	stop := make(chan struct{})
 	stopConfirm := make(chan struct{})
