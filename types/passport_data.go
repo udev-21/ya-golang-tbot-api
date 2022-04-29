@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/udev-21/ya-golang-tbot-api/types/passport"
 )
@@ -53,7 +52,6 @@ func (pd *PassportData) DecryptAllFields(privKey *rsa.PrivateKey) error {
 				return fmt.Errorf("epet type %q not found in secureData", epet)
 			}
 		} else {
-			// log.Printf("trying to decode %q\n", elem.Type)
 			switch elem.Type {
 			case EPETPersonalDetails, EPETPassport, EPETDriverLicense, EPETAddress, EPETIdentityCard, EPETInternalPassport:
 				decoded, err := elem.DecryptData(secureVal.Data.Secret, secureVal.Data.DataHash)
@@ -65,7 +63,6 @@ func (pd *PassportData) DecryptAllFields(privKey *rsa.PrivateKey) error {
 					pd.PersonalDetails = new(passport.PersonalDetails)
 					err = json.Unmarshal(decoded, pd.PersonalDetails)
 				case EPETPassport:
-					log.Println(string(decoded))
 					pd.Passport = new(passport.Passport)
 					pd.Passport.FrontSide = *elem.FrontSide
 					pd.Passport.Selfie = elem.Selfie

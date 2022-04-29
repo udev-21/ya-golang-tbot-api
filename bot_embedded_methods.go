@@ -3,7 +3,6 @@ package yagolangtbotapi
 import (
 	"encoding/json"
 	"io"
-	"log"
 
 	"github.com/udev-21/ya-golang-tbot-api/method"
 	"github.com/udev-21/ya-golang-tbot-api/types"
@@ -153,7 +152,7 @@ func (ba *BotAPI) GetChatAdministrators(chat *types.Chat) (types.ChatMembers, er
 	if err != nil {
 		return nil, err
 	}
-	log.Println(string(res))
+
 	var response struct {
 		types.ApiResponse
 		ChatMembers types.ChatMembers `json:"result,omitempty"`
@@ -185,7 +184,7 @@ func (ba *BotAPI) DeleteChatPhoto(chat *types.Chat) error {
 	if err != nil {
 		return err
 	}
-	log.Println(string(res))
+
 	var response types.ApiResponse
 
 	err = json.Unmarshal(res, &response)
@@ -216,7 +215,6 @@ func (ba *BotAPI) CreateChatInviteLink(chat *types.Chat, content *method.CreateC
 	if err != nil {
 		return nil, err
 	}
-	log.Println(string(res))
 	var response struct {
 		OK   bool                 `json:"ok"`
 		Link types.ChatInviteLink `json:"result"`
@@ -250,7 +248,6 @@ func (ba *BotAPI) EditChatInviteLink(chat *types.Chat, content *method.EditChatI
 	if err != nil {
 		return nil, err
 	}
-	log.Println(string(res))
 	var response struct {
 		OK   bool                 `json:"ok"`
 		Link types.ChatInviteLink `json:"result"`
@@ -284,7 +281,6 @@ func (ba *BotAPI) RevokeChatInviteLink(chat *types.Chat, content *method.RevokeC
 	if err != nil {
 		return nil, err
 	}
-	log.Println(string(res))
 	var response struct {
 		OK   bool                 `json:"ok"`
 		Link types.ChatInviteLink `json:"result"`
