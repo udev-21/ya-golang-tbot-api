@@ -66,7 +66,7 @@ Full list of filters you can find in [here](https://github.com/udev-21/ya-golang
 
 Here's some examples for using them:
 ```go
-// filter for: anyText message anywhere: private,group,supergroup
+// filter for: any text message from anywhere
 bot.Handle(filter.OnAnyText, yourHandlerFunc)
 
 // filter for: only supergroup and any text message
