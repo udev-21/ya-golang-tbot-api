@@ -802,6 +802,7 @@ func (ba *BotAPI) DeleteStickerFromSet(stickerFileID string) error {
 
 	return nil
 }
+
 func (ba *BotAPI) SetWebhook(payload *method.SetWebhook) error {
 	if payload == nil {
 		return newError("payload required")

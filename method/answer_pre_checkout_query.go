@@ -1,26 +1,29 @@
 package method
 
 import (
-	"github.com/udev-21/ya-golang-tbot-api/types"
+	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
+
+func NewAnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool) *AnswerPreCheckoutQuery {
+	return &AnswerPreCheckoutQuery{
+		PreCheckoutQueryID: preCheckoutQueryID,
+		OK:                 ok,
+	}
+}
 
 type AnswerPreCheckoutQuery struct {
 	PreCheckoutQueryID string  `json:"pre_checkout_query_id"`
 	OK                 bool    `json:"ok"`
-	ErrorMessage       *string `json:"error_message"`
+	ErrorMessage       *string `json:"error_message,omitempty"`
 }
 
-func (apcq *AnswerPreCheckoutQuery) GetEndpoint() string {
+func (apcq *AnswerPreCheckoutQuery) Endpoint() string {
 	return "answerPreCheckoutQuery"
 }
 
-func (apcq *AnswerPreCheckoutQuery) RawJsonPayload() (map[string]interface{}, error) {
+func (apcq *AnswerPreCheckoutQuery) Params() (myTypes.Params, error) {
 	return utils.ConvertToMapStringInterface(apcq)
-}
-
-func (apcq *AnswerPreCheckoutQuery) UploadFiles() map[string]types.InputFile {
-	return nil
 }
 
 func (apcq *AnswerPreCheckoutQuery) WithErrorMessage(errorMsg string) {
