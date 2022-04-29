@@ -40,8 +40,8 @@ func handle(ctx gtbotapi.Context) error {
 
 	payload.WithReplyToMessageID(ctx.Message().MessageID) //  reply to specific message
 
-	reciver := ctx.Chat() // choose message reciever chat
-	_, err := ctx.Send(reciver, payload)
+	receiver := ctx.Chat() // choose message reciever chat
+	_, err := ctx.Send(receiver, payload)
 	// apiResponse, err := ctx.Send(reciver, payload) // use this one if you need process api response
 
 	return err
