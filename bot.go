@@ -15,6 +15,7 @@ import (
 
 	myTypes "github.com/udev-21/ya-golang-tbot-api/method/types"
 	"github.com/udev-21/ya-golang-tbot-api/types"
+	"github.com/udev-21/ya-golang-tbot-api/utils"
 )
 
 type BotAPI struct {
@@ -298,25 +299,26 @@ func (ba *BotAPI) Send(reciever interface{}, payload myTypes.Sendable) (*types.A
 	}
 
 	var chatID interface{}
-
-	if chat, ok := reciever.(types.Chat); ok {
-		if chat.ID != 0 {
-			chatID = chat.ID
-		} else {
-			chatID = chat.Username
+	if utils.NotNil(reciever) {
+		if chat, ok := reciever.(types.Chat); ok {
+			if chat.ID != 0 {
+				chatID = chat.ID
+			} else {
+				chatID = chat.Username
+			}
+		} else if chat1, ok1 := reciever.(*types.Chat); ok1 {
+			if chat1.ID != 0 {
+				chatID = chat1.ID
+			} else {
+				chatID = chat1.Username
+			}
 		}
-	} else if chat, ok := reciever.(*types.Chat); ok {
-		if chat.ID != 0 {
-			chatID = chat.ID
-		} else {
-			chatID = chat.Username
+		if chatID != nil {
+			if ba.debug {
+				writeLog(LogLevelInfo, ba.logger, "chat_id set: %v", chatID)
+			}
+			data["chat_id"] = chatID
 		}
-	}
-	if chatID != nil {
-		if ba.debug {
-			writeLog(LogLevelInfo, ba.logger, "chat_id set: %v", chatID)
-		}
-		data["chat_id"] = chatID
 	}
 
 	if payloadWithFiles, ok := payload.(myTypes.UploadWithFiles); ok {
