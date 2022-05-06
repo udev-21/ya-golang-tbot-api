@@ -37,7 +37,6 @@ const TOKEN = "BOT:TOKEN"
 func main() {
 	bot := gtbotapi.NewBotAPI(TOKEN)
 
-	// if you send "ping" any chat this one will reply as "pong"
 	bot.Handle(filter.OnText("payload"), handle)
 
 	bot.Handle(filter.PreCheckout, preCheckoutHandler)
