@@ -17,8 +17,8 @@ func handle(ctx gtbotapi.Context) error {
 
 	payload.WithReplyToMessageID(ctx.Message().MessageID) //  reply to specific message
 
-	reciver := ctx.Chat() // choose message reciever chat
-	_, err := ctx.Send(reciver, payload)
+	receiver := ctx.Chat() // choose message receiver chat
+	_, err := ctx.Send(receiver, payload)
 	// apiResponse, err := ctx.Send(reciver, payload) // use this one if you need process api response
 
 	return err
@@ -30,7 +30,6 @@ const TOKEN = "BOT:TOKEN"
 func main() {
 	bot := gtbotapi.NewBotAPI(TOKEN)
 
-	// if you send "ping" any chat this one will reply as "pong"
 	bot.Handle(filter.OnText("photo"), handle)
 
 	bot.Start()
